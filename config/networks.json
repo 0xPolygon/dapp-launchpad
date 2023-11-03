@@ -1,0 +1,44 @@
+{
+    "ethereum": {
+        "chainId": 1,
+        "url": "https://rpc.ankr.com/eth",
+        "forking": {
+            "url": "https://rpc.ankr.com/eth"
+        }
+    },
+    "goerli": {
+        "chainId": 5,
+        "url": "https://rpc.ankr.com/eth_goerli",
+        "forking": {
+            "url": "https://rpc.ankr.com/eth_goerli"
+        }
+    },
+    "polygonPos": {
+        "chainId": 137,
+        "url": "https://rpc.ankr.com/polygon",
+        "forking": {
+            "url": "https://rpc.ankr.com/polygon"
+        }
+    },
+    "polygonMumbai": {
+        "chainId": 80001,
+        "url": "https://rpc.ankr.com/polygon_mumbai",
+        "forking": {
+            "url": "https://rpc.ankr.com/polygon_mumbai"
+        }
+    },
+    "polygonZkevm": {
+        "chainId": 1101,
+        "url": "https://rpc.ankr.com/polygon_zkevm",
+        "forking": {
+            "url": "https://rpc.ankr.com/polygon_zkevm"
+        }
+    },
+    "polygonZkevmTestnet": {
+        "chainId": 1442,
+        "url": "https://rpc.public.zkevm-test.net",
+        "forking": {
+            "url": "https://rpc.public.zkevm-test.net"
+        }
+    }
+}

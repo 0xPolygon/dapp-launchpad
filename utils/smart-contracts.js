@@ -2,6 +2,7 @@ import shell from "shelljs";
 import { logErrorWithBg, logSuccessWithBg, logInfoWithBg } from "./print.js";
 import { ethers } from "ethers";
 import { waitFor } from "./time.js";
+import networksMap from "../config/networks.json" assert { type: "json" };
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -9,35 +10,50 @@ const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:854
 /**
  * @description Starts a local blockchain
  * @param projectRootDir Root of the project
+ * @param additionalOptions Additional options to start local chain
  * @returns Process in which local blockchain runs
  */
-export const startLocalBlockchain = async (projectRootDir) => {
-    const process = shell.exec("npx hardhat node", {
+export const startLocalBlockchain = async (projectRootDir, { forkNetwork, forkBlockNumber }) => {
+    // Fork params
+    const forkNetworkConfig = getSupportedNetworkConfig(forkNetwork);
+    const forkParams = `${forkNetworkConfig ? `--fork ${forkNetworkConfig.forking.url}` : ""} ${(forkNetworkConfig && forkBlockNumber) ? `--fork-block-number ${forkBlockNumber}` : ""}`
+
+    // Start process
+    const process = shell.exec(`npx hardhat node ${forkParams}`, {
         async: true,
         cwd: `${projectRootDir}/smart-contracts`
     });
     process.on("spawn", () => {
-        logSuccessWithBg("Local test blockchain starting; HTTP-JSON-RPC: http://127.0.0.1:8545");
+        logSuccessWithBg("Local test blockchain (ID:31337) starting; HTTP-JSON-RPC: http://127.0.0.1:8545");
     });
     process.on("close", () => {
         logErrorWithBg("Local test blockchain stopped");
     });
-    await waitFor(2);
+    //await waitFor(forkParams ? 20 : 3);
+    await waitFor(3);
     return process;
 }
 
 /**
  * @description Runs the deploy script to deploy all smart contracts on local chain
  * @param projectRootDir Project root directory
+ * @param firstTimeDeploying True, if it's the first time this function is called
  * @returns Map of deployed smart contract names to their details
  */
-export const deploySmartContractsLocalChain = async (projectRootDir, startBlockNumber = 1) => {
+export const deploySmartContractsLocalChain = async (projectRootDir, startBlockNumber = 1, firstTimeDeploying) => {
     // Deploy
-    logSuccessWithBg(`${startBlockNumber === 1 ? "Deploying" : "Redeploying"} smart contracts on local chain`);
+    logSuccessWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
 
-    shell.exec("npx hardhat run --network localhost scripts/deploy_localhost.ts", {
-        cwd: `${projectRootDir}/smart-contracts`
+    let exitStat = shell.exec("npx hardhat run --network localhost scripts/deploy_localhost.ts", {
+        cwd: `${projectRootDir}/smart-contracts`,
+        silent: true
     });
+    while (exitStat.stderr?.includes("Cannot connect to the network localhost")) {
+        exitStat = shell.exec("npx hardhat run --network localhost scripts/deploy_localhost.ts", {
+            cwd: `${projectRootDir}/smart-contracts`,
+            silent: true
+        });
+    }
 
     const { contractsDeployedMap, blockNumberCurr } = await getDeployedSmartContractsLocalChain(projectRootDir, startBlockNumber);
 
@@ -106,4 +122,35 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir, startB
         contractsDeployedMap,
         blockNumberCurr: blockNumberCurrInt
     };
+}
+
+/**
+ * @description Gets names of supported Network names in Hardhat
+ * @returns Array of names
+ */
+export const getSupportedNetworkNames = () => {
+    return Object.keys(networksMap);
+}
+
+/**
+ * @description Gets a supported network's config
+ * @param {string} networkName Name of the network
+ * @returns Config
+ */
+export const getSupportedNetworkConfig = (networkName) => {
+    return networksMap[networkName];
+}
+
+/**
+ * @description Gets a supported network's latest block number
+ * @param {string} networkName Name of the network
+ * @returns Latest block number
+ */
+export const getLatestBlockNumberOfNetwork = async (networkName) => {
+    const rpcUrl = getSupportedNetworkConfig(networkName).forking.url;
+    const provider = new ethers.JsonRpcProvider(rpcUrl);
+    const blockNumberCurr = await provider.send("eth_blockNumber", []);
+    const blockNumberCurrInt = parseInt(blockNumberCurr);
+
+    return blockNumberCurrInt;
 }
