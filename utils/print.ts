@@ -1,11 +1,11 @@
 import chalk from "chalk";
-import { getCurrentTimeInHumanRdFormat } from "./time.js";
+import { getCurrentTimeInHumanRdFormat } from "./time";
 
 /**
  * @description Logs an error
  * @argument args What to print
  */
-export const logError = (...args) => {
+export const logError = (...args: string[]) => {
     console.log(
         chalk.redBright(`[${getCurrentTimeInHumanRdFormat()}] ! `, ...args)
     );
@@ -15,7 +15,7 @@ export const logError = (...args) => {
  * @description Logs an error
  * @argument args What to print
  */
-export const logErrorWithBg = (...args) => {
+export const logErrorWithBg = (...args: string[]) => {
     console.log(
         chalk.bgRed.white(`[${getCurrentTimeInHumanRdFormat()}] ! `, ...args)
     );
@@ -25,7 +25,7 @@ export const logErrorWithBg = (...args) => {
  * @description Logs an info
  * @argument args What to print
  */
-export const logInfo = (...args) => {
+export const logInfo = (...args: string[]) => {
     console.log(
         chalk.blueBright(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
     );
@@ -35,7 +35,7 @@ export const logInfo = (...args) => {
  * @description Logs an info
  * @argument args What to print
  */
-export const logInfoWithBg = (...args) => {
+export const logInfoWithBg = (...args: string[]) => {
     console.log(
         chalk.bgBlue.white(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
     );
@@ -45,7 +45,7 @@ export const logInfoWithBg = (...args) => {
  * @description Logs a success
  * @argument args What to print
  */
-export const logSuccess = (...args) => {
+export const logSuccess = (...args: string[]) => {
     console.log(
         chalk.greenBright(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
     );
@@ -55,7 +55,7 @@ export const logSuccess = (...args) => {
  * @description Logs a success
  * @argument args What to print
  */
-export const logSuccessWithBg = (...args) => {
+export const logSuccessWithBg = (...args: string[]) => {
     console.log(
         chalk.bgGreen.white(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
     );

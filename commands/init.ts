@@ -2,7 +2,7 @@ import shelljs from "shelljs";
 import { logErrorWithBg, logInfoWithBg, logSuccessWithBg } from "../utils/print.js";
 import { getCWD } from "../utils/project.js";
 
-export const init = (projectName) => {
+export const init = (projectName: string) => {
     // Check if GIT exists
     if (!shelljs.which("git")) {
         logErrorWithBg("You need GIT to initialise the project. To know how, please refer https://github.com/git-guides/install-git.");

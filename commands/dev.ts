@@ -4,14 +4,15 @@ import chokidar from "chokidar";
 import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork } from "../utils/smart-contracts.js";
 import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file.js";
 import { startLocalFrontendDevServer } from "../utils/frontend.js";
+import shelljs from "shelljs";
 
 /**
  * @description Command that runs on Dev
  */
-export const dev = async ({ forkNetwork, forkBlockNumber }) => {
+export const dev = async ({ forkNetwork, forkBlockNumber }: { forkNetwork?: string; forkBlockNumber?: string }) => {
     // Data
-    let projectRootDir;
-    let localBlockchainProcess;
+    let projectRootDir: string;
+    let localBlockchainProcess: ReturnType<typeof shelljs.exec>;
     let localFrontendDevServerProcess;
     let watcher;
     let interval;
@@ -84,8 +85,8 @@ export const dev = async ({ forkNetwork, forkBlockNumber }) => {
     } catch (e) {
         console.error(e);
         clearInterval(interval);
-        localBlockchainProcess.kill("SIGINT");
-        localFrontendDevServerProcess.kill("SIGINT");
-        await watcher.close();
+        localBlockchainProcess!.kill("SIGINT");
+        localFrontendDevServerProcess!.kill("SIGINT");
+        await watcher?.close();
     }
 }

@@ -2,7 +2,7 @@
  * @description Waits for specified time
  * @param {number} timeInSecs Time to wait in seconds
  */
-export const waitFor = (timeInSecs) => {
+export const waitFor = (timeInSecs: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, timeInSecs * 1000);
     });

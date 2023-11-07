@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
-import { dev } from "./commands/dev.js";
-import { init } from "./commands/init.js";
+import { dev } from "./commands/dev";
+import { init } from "./commands/init";
 
 /// Metadata
 program

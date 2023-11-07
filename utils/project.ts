@@ -10,7 +10,7 @@ export const getCWD = () => {
 
 /**
  * @description Checks if current directory is the project root directory
- * @returns 
+ * @returns True, if it is
  */
 export const isCWDProjectRootDirectory = () => {
     const smartContractsDirExists = shell.test("-d", `${process.cwd()}/smart-contracts`);

@@ -4,7 +4,7 @@ import shell from "shelljs";
  * @description Copies typechain types to frontend
  * @param {string} projectRootDir 
  */
-export const writeTypechainTypesToFrontend = (projectRootDir) => {
+export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
     if (shell.test("-d", `${projectRootDir}/frontend/src/types/typechain-types`)) {
         shell.rm("-r", `${projectRootDir}/frontend/src/types/typechain-types`);
     }
@@ -18,11 +18,11 @@ export const writeTypechainTypesToFrontend = (projectRootDir) => {
 
 /**
  * @description Writes smart contracts data to frontend
- * @param {string} projectRootDir Project root directory
- * @param {"development" | "production"} env Environment
- * @param {string} data Data to write
+ * @param projectRootDir Project root directory
+ * @param env Environment
+ * @param data Data to write
  */
-export const writeSmartContractsDataToFrontend = (projectRootDir, env = "development", data) => {
+export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: "development" | "production" = "development", data: any) => {
     if(!shell.test("-d", `${projectRootDir}/frontend/src/constants`)) {
         shell.mkdir("-p", `${projectRootDir}/frontend/src/constants`);
     }

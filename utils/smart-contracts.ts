@@ -1,8 +1,8 @@
 import shell from "shelljs";
-import { logErrorWithBg, logSuccessWithBg, logInfoWithBg } from "./print.js";
+import { logErrorWithBg, logSuccessWithBg, logInfoWithBg } from "./print";
 import { ethers } from "ethers";
-import { waitFor } from "./time.js";
-import networksMap from "../config/networks.json" assert { type: "json" };
+import { waitFor } from "./time";
+import networksMap from "../config/networks.json";
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -13,7 +13,13 @@ const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:854
  * @param additionalOptions Additional options to start local chain
  * @returns Process in which local blockchain runs
  */
-export const startLocalBlockchain = async (projectRootDir, { forkNetwork, forkBlockNumber }) => {
+export const startLocalBlockchain = async (
+    projectRootDir: string,
+    { forkBlockNumber, forkNetwork }: {
+        forkNetwork?: string,
+        forkBlockNumber?: string | number
+    } = {}
+) => {
     // Fork params
     const forkNetworkConfig = getSupportedNetworkConfig(forkNetwork);
     const forkParams = `${forkNetworkConfig ? `--fork ${forkNetworkConfig.forking.url}` : ""} ${(forkNetworkConfig && forkBlockNumber) ? `--fork-block-number ${forkBlockNumber}` : ""}`
@@ -40,7 +46,7 @@ export const startLocalBlockchain = async (projectRootDir, { forkNetwork, forkBl
  * @param firstTimeDeploying True, if it's the first time this function is called
  * @returns Map of deployed smart contract names to their details
  */
-export const deploySmartContractsLocalChain = async (projectRootDir, startBlockNumber = 1, firstTimeDeploying) => {
+export const deploySmartContractsLocalChain = async (projectRootDir: string, startBlockNumber = 1, firstTimeDeploying: boolean) => {
     // Deploy
     logSuccessWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
 
@@ -73,18 +79,18 @@ export const deploySmartContractsLocalChain = async (projectRootDir, startBlockN
  * @param startBlockNumber Block number to start enumerating from
  * @returns `contractsDeployedLatest` - Map of contract name to contract details (latest only)
  */
-export const getDeployedSmartContractsLocalChain = async (projectRootDir, startBlockNumber = 1) => {
+export const getDeployedSmartContractsLocalChain = async (projectRootDir: string, startBlockNumber = 1) => {
     // Get current block number
     const blockNumberCurr = await providerLocalBlockchain.send("eth_blockNumber", []);
     const blockNumberCurrInt = parseInt(blockNumberCurr);
 
     // For each block number after last procesed block number, get block transactions, and filter by which ones are Contract deployment transactions
-    const blockTransactionsContractDeployments = [];
+    const blockTransactionsContractDeployments: Array<{ to: string, input: string, hash: string }> = [];
     const transactionsQueryPromises = [];
     for (let blockNumberToQuery = startBlockNumber; blockNumberToQuery <= blockNumberCurrInt; blockNumberToQuery++) {
         transactionsQueryPromises.push(
             (async () => {
-                const blockTransactions = (await providerLocalBlockchain.send("eth_getBlockByNumber", [`0x${blockNumberToQuery.toString(16)}`, true]))?.transactions ?? [];
+                const blockTransactions: Array<{ to: string, input: string, hash: string }> = (await providerLocalBlockchain.send("eth_getBlockByNumber", [`0x${blockNumberToQuery.toString(16)}`, true]))?.transactions ?? [];
                 blockTransactionsContractDeployments.push(
                     ...(blockTransactions.filter((tx) => tx.to === null))
                 );
@@ -101,7 +107,7 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir, startB
     );
 
     // For all found transactions, get their Contract address, bytecode and name
-    const contractsDeployedMap = {};
+    const contractsDeployedMap: { [contractName: string]: { contractAddress: string; bytecode: string; abi: any } } = {};
     const artifactFilesPath = shell
         .ls("-R", [`${projectRootDir}/smart-contracts/artifacts/contracts/**/*.json`])
         .filter((path) => !path.endsWith(".dbg.json"));
@@ -137,8 +143,8 @@ export const getSupportedNetworkNames = () => {
  * @param {string} networkName Name of the network
  * @returns Config
  */
-export const getSupportedNetworkConfig = (networkName) => {
-    return networksMap[networkName];
+export const getSupportedNetworkConfig = (networkName?: string) => {
+    return (networksMap as any)[networkName ?? ""];
 }
 
 /**
@@ -146,7 +152,7 @@ export const getSupportedNetworkConfig = (networkName) => {
  * @param {string} networkName Name of the network
  * @returns Latest block number
  */
-export const getLatestBlockNumberOfNetwork = async (networkName) => {
+export const getLatestBlockNumberOfNetwork = async (networkName: string) => {
     const rpcUrl = getSupportedNetworkConfig(networkName).forking.url;
     const provider = new ethers.JsonRpcProvider(rpcUrl);
     const blockNumberCurr = await provider.send("eth_blockNumber", []);
