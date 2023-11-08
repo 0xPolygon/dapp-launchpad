@@ -1,10 +1,11 @@
-import { getCWD, isCWDProjectRootDirectory } from "../utils/project.js";
-import { logErrorWithBg } from "../utils/print.js";
+import { getCWD, isCWDProjectRootDirectory } from "../utils/project";
+import { logErrorWithBg } from "../utils/print";
 import chokidar from "chokidar";
-import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork } from "../utils/smart-contracts.js";
-import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file.js";
-import { startLocalFrontendDevServer } from "../utils/frontend.js";
+import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork } from "../utils/smart-contracts";
+import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file";
+import { startLocalFrontendDevServer } from "../utils/frontend";
 import shelljs from "shelljs";
+import path from "path";
 
 /**
  * @description Command that runs on Dev
@@ -67,8 +68,8 @@ export const dev = async ({ forkNetwork, forkBlockNumber }: { forkNetwork?: stri
 
         //// 3. Start watcher for local blockchain directory
         watcher = chokidar.watch([
-            `${projectRootDir}/smart-contracts/contracts`,
-            `${projectRootDir}/smart-contracts/scripts/deploy_localhost.ts`,
+            path.resolve(projectRootDir, "smart-contracts", "contracts"),
+            path.resolve(projectRootDir, "smart-contracts", "scripts", "deploy_localhost.ts"),
         ], {
             awaitWriteFinish: {
                 stabilityThreshold: 2000,

@@ -1,5 +1,6 @@
 import shelljs from "shelljs";
 import { logSuccessWithBg } from "./print";
+import path from "path";
 
 /**
  * @description Starts local frontend dev server
@@ -12,7 +13,7 @@ export const startLocalFrontendDevServer = (projectRootDir: string) => {
         "npm run dev",
         {
             async: true,
-            cwd: `${projectRootDir}/frontend`
+            cwd: path.resolve(projectRootDir, "frontend")
         }
     )
 }

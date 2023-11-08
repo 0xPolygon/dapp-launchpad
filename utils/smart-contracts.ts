@@ -3,6 +3,7 @@ import { logErrorWithBg, logSuccessWithBg, logInfoWithBg } from "./print";
 import { ethers } from "ethers";
 import { waitFor } from "./time";
 import networksMap from "../config/networks.json";
+import path from "path";
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -27,7 +28,7 @@ export const startLocalBlockchain = async (
     // Start process
     const process = shell.exec(`npx hardhat node ${forkParams}`, {
         async: true,
-        cwd: `${projectRootDir}/smart-contracts`
+        cwd: path.resolve(projectRootDir, "smart-contracts")
     });
     process.on("spawn", () => {
         logSuccessWithBg("Local test blockchain (ID:31337) starting; HTTP-JSON-RPC: http://127.0.0.1:8545");
@@ -50,13 +51,13 @@ export const deploySmartContractsLocalChain = async (projectRootDir: string, sta
     // Deploy
     logSuccessWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
 
-    let exitStat = shell.exec("npx hardhat run --network localhost scripts/deploy_localhost.ts", {
-        cwd: `${projectRootDir}/smart-contracts`,
+    let exitStat = shell.exec(`npx hardhat run --network localhost ${path.resolve("scripts", "deploy_localhost.ts")}`, {
+        cwd: path.resolve(projectRootDir, "smart-contracts"),
         silent: true
     });
     while (exitStat.stderr?.includes("Cannot connect to the network localhost")) {
-        exitStat = shell.exec("npx hardhat run --network localhost scripts/deploy_localhost.ts", {
-            cwd: `${projectRootDir}/smart-contracts`,
+        exitStat = shell.exec(`npx hardhat run --network localhost ${path.resolve("scripts", "deploy_localhost.ts")}`, {
+            cwd: path.resolve(projectRootDir, "smart-contracts"),
             silent: true
         });
     }
@@ -109,7 +110,7 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
     // For all found transactions, get their Contract address, bytecode and name
     const contractsDeployedMap: { [contractName: string]: { contractAddress: string; bytecode: string; abi: any } } = {};
     const artifactFilesPath = shell
-        .ls("-R", [`${projectRootDir}/smart-contracts/artifacts/contracts/**/*.json`])
+        .ls("-R", [path.resolve(projectRootDir, "smart-contracts", "artifacts", "contracts", `**${path.sep}*.json`)])
         .filter((path) => !path.endsWith(".dbg.json"));
     const artifacts = artifactFilesPath.map((path) => JSON.parse(shell.cat(path)));
 

@@ -1,19 +1,25 @@
 import shell from "shelljs";
+import path from "path";
 
 /**
  * @description Copies typechain types to frontend
  * @param {string} projectRootDir 
  */
 export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
-    if (shell.test("-d", `${projectRootDir}/frontend/src/types/typechain-types`)) {
-        shell.rm("-r", `${projectRootDir}/frontend/src/types/typechain-types`);
+    const typechainDir = path.resolve(projectRootDir, "frontend", "src", "types", "typechain-types");
+    if (shell.test("-d", typechainDir)) {
+        shell.rm("-r", typechainDir);
     }
 
-    if(!shell.test("-d", `${projectRootDir}/frontend/src/types`)) {
-        shell.mkdir("-p", `${projectRootDir}/frontend/src/types`);
+    const typeDir = path.resolve(projectRootDir, "frontend", "src", "types");
+    if (!shell.test("-d", typeDir)) {
+        shell.mkdir("-p", typeDir);
     }
 
-    shell.cp("-r", `${projectRootDir}/smart-contracts/typechain-types`, `${projectRootDir}/frontend/src/types`);
+    shell.cp("-r",
+        path.resolve(projectRootDir, "smart-contracts", "typechain-types"),
+        typeDir
+    );
 }
 
 /**
@@ -23,10 +29,11 @@ export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
  * @param data Data to write
  */
 export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: "development" | "production" = "development", data: any) => {
-    if(!shell.test("-d", `${projectRootDir}/frontend/src/constants`)) {
-        shell.mkdir("-p", `${projectRootDir}/frontend/src/constants`);
+    const constantsDir = path.resolve(projectRootDir, "frontend", "src", "constants");
+    if (!shell.test("-d", constantsDir)) {
+        shell.mkdir("-p", constantsDir);
     }
 
     new shell.ShellString(JSON.stringify(data))
-        .to(`${projectRootDir}/frontend/src/constants/smart-contracts.json`);
+        .to(path.resolve(projectRootDir, "frontend", "src", "constants", "smart-contracts.json"));
 }

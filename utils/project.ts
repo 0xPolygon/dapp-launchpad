@@ -1,4 +1,5 @@
 import shell from "shelljs";
+import path from "path";
 
 /**
  * @description Gets Poly-Scaffold project's root directory
@@ -13,8 +14,8 @@ export const getCWD = () => {
  * @returns True, if it is
  */
 export const isCWDProjectRootDirectory = () => {
-    const smartContractsDirExists = shell.test("-d", `${process.cwd()}/smart-contracts`);
-    const frontendDirExists = shell.test("-d", `${process.cwd()}/frontend`);
+    const smartContractsDirExists = shell.test("-d", path.resolve(process.cwd(), "smart-contracts"));
+    const frontendDirExists = shell.test("-d", path.resolve(process.cwd(), "frontend"));
 
     return (smartContractsDirExists && frontendDirExists);
 }

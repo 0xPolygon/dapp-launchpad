@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rollup -c",
     "install-global": "npm i -g --force",
-    "dev": "rollup --watch --watch.onEnd 'npm run install-local' -c"
+    "dev": "rollup --watch --watch.onEnd 'npm run install-global' -c"
   },
   "dependencies": {
     "chalk": "^5.3.0",
