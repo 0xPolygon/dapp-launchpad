@@ -51,12 +51,12 @@ export const deploySmartContractsLocalChain = async (projectRootDir: string, sta
     // Deploy
     logSuccessWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
 
-    let exitStat = shell.exec(`npx hardhat run --network localhost ${path.resolve("scripts", "deploy_localhost.ts")}`, {
+    let exitStat = shell.exec(`npx hardhat run --network localhost scripts${path.sep}deploy_localhost.ts`, {
         cwd: path.resolve(projectRootDir, "smart-contracts"),
         silent: true
     });
     while (exitStat.stderr?.includes("Cannot connect to the network localhost")) {
-        exitStat = shell.exec(`npx hardhat run --network localhost ${path.resolve("scripts", "deploy_localhost.ts")}`, {
+        exitStat = shell.exec(`npx hardhat run --network localhost scripts${path.sep}deploy_localhost.ts`, {
             cwd: path.resolve(projectRootDir, "smart-contracts"),
             silent: true
         });
