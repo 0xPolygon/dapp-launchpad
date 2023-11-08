@@ -23,10 +23,16 @@ export const startLocalBlockchain = async (
 ) => {
     // Fork params
     const forkNetworkConfig = getSupportedNetworkConfig(forkNetworkName);
-    const forkParams = `${forkNetworkConfig ? `--fork ${forkNetworkConfig.forking.url}` : ""} ${(forkNetworkConfig && forkBlockNumber) ? `--fork-block-number ${forkBlockNumber}` : ""}`
+
+    const forkNetworkParam = forkNetworkConfig
+        ? `--fork ${forkNetworkConfig.forking.url} `
+        : "";
+    const forkBlockNumberParam = forkNetworkConfig && forkBlockNumber
+        ? `--fork-block-number ${forkBlockNumber}`
+        : "";
 
     // Start process
-    const process = shell.exec(`npx hardhat node ${forkParams}`, {
+    const process = shell.exec(`npx hardhat node ${forkNetworkParam} ${forkBlockNumberParam}`, {
         async: true,
         cwd: path.resolve(projectRootDir, "smart-contracts")
     });
@@ -135,7 +141,7 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
     for (let i = 0; i < blockTransactionReceipts.length; i++) {
         const artifact = artifacts.find((artifact) => artifact.bytecode === blockTransactionsContractDeployments[i].input);
 
-        if(!artifact) continue;
+        if (!artifact) continue;
 
         contractsDeployedMap[artifact.contractName.toUpperCase()] = {
             contractAddress: blockTransactionReceipts[i].contractAddress,
@@ -156,7 +162,10 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
  * @returns Array of names
  */
 export const getSupportedNetworkNames = () => {
-    return Object.keys(networksMap);
+    return Object
+        .entries(networksMap)
+        .filter(([_, config]) => (config as any).forking)
+        .map(([networkName]) => networkName);
 }
 
 /**
@@ -174,7 +183,7 @@ export const getSupportedNetworkConfig = (networkName?: string) => {
  * @returns Latest block number
  */
 export const getLatestBlockNumberOfNetwork = async (networkName: string) => {
-    const rpcUrl = getSupportedNetworkConfig(networkName).forking.url;
+    const rpcUrl = getSupportedNetworkConfig(networkName).url;
     const provider = new ethers.JsonRpcProvider(rpcUrl);
     const blockNumberCurr = await provider.send("eth_blockNumber", []);
     const blockNumberCurrInt = parseInt(blockNumberCurr);

@@ -10,7 +10,7 @@ import path from "path";
 /**
  * @description Command that runs on Dev
  */
-export const dev = async ({ forkNetworkName, forkBlockNumber }: { forkNetworkName?: string; forkBlockNumber?: string }) => {
+export const dev = async ({ forkNetworkName, forkBlockNum }: { forkNetworkName?: string; forkBlockNum?: string }) => {
     // Data
     let projectRootDir: string;
     let localBlockchainProcess: ReturnType<typeof shelljs.exec>;
@@ -52,11 +52,11 @@ export const dev = async ({ forkNetworkName, forkBlockNumber }: { forkNetworkNam
                 logErrorWithBg(`Network unsupported! Supported networks are: ${supportedNetworks.join(", ")}`);
                 return;
             } else {
-                if (forkBlockNumber) {
-                    startBlockNumber = parseInt(forkBlockNumber);
-                } else {
-                    const network = getSupportedNetworkConfig(forkNetworkName);
-                    startBlockNumber = await getLatestBlockNumberOfNetwork(forkNetworkName) - Math.ceil((5 * 60) / network.blockTime); // Start from a block 5 minutes before latest block, for stability
+                if (forkBlockNum) {
+                    startBlockNumber = parseInt(forkBlockNum);
+                }
+                else {
+                    startBlockNumber = await getLatestBlockNumberOfNetwork(forkNetworkName);
                 }
             }
         }
