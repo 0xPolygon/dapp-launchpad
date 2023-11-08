@@ -23,7 +23,7 @@ program
 program
     .command("dev")
     .description("Starts a local dev environment - a local blockchain (hardhat) and a local FE (Next.js) server")
-    .option("-n, --fork-network [NAME]", "Name of the network to fork; optional. By default, it starts a new chain from genesis block.")
+    .option("-n, --fork-network-name [NAME]", "Name of the network to fork; optional. By default, it starts a new chain from genesis block.")
     .option("-b, --fork-block-num [number]", "Block number to fork at. By default, it's the latest block.")
     .action(dev);
 

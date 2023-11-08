@@ -16,13 +16,13 @@ const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:854
  */
 export const startLocalBlockchain = async (
     projectRootDir: string,
-    { forkBlockNumber, forkNetwork }: {
-        forkNetwork?: string,
+    { forkBlockNumber, forkNetworkName }: {
+        forkNetworkName?: string,
         forkBlockNumber?: string | number
     } = {}
 ) => {
     // Fork params
-    const forkNetworkConfig = getSupportedNetworkConfig(forkNetwork);
+    const forkNetworkConfig = getSupportedNetworkConfig(forkNetworkName);
     const forkParams = `${forkNetworkConfig ? `--fork ${forkNetworkConfig.forking.url}` : ""} ${(forkNetworkConfig && forkBlockNumber) ? `--fork-block-number ${forkBlockNumber}` : ""}`
 
     // Start process
@@ -31,14 +31,38 @@ export const startLocalBlockchain = async (
         cwd: path.resolve(projectRootDir, "smart-contracts")
     });
     process.on("spawn", () => {
-        logSuccessWithBg("Local test blockchain (ID:31337) starting; HTTP-JSON-RPC: http://127.0.0.1:8545");
+        logInfoWithBg("Starting local test blockchain");
     });
     process.on("close", () => {
         logErrorWithBg("Local test blockchain stopped");
     });
-    //await waitFor(forkParams ? 20 : 3);
-    await waitFor(3);
+
+    // Return process
     return process;
+}
+
+/**
+ * @description Waits for local blockchain to start
+ */
+export const waitForLocalBlockchainToStart = async (forkBlockNumber: number) => {
+    while (true) {
+        try {
+            await fetch("http://127.0.0.1:8545");
+            logSuccessWithBg(
+                forkBlockNumber === 1
+                    ? "Started test blockchain (ID:31337); HTTP-JSON-RPC: http://127.0.0.1:8545"
+                    : `Started test blockchain (ID:31337); forked at block#${forkBlockNumber}; HTTP-JSON-RPC: http://127.0.0.1:8545`
+            );
+            break;
+        } catch (e: any) {
+            if (e.cause.toString().includes("ECONNREFUSED")) { // If RPC has not started yet
+                await waitFor(2);
+            } else {
+                logErrorWithBg("Failed to start local test blockchain; ", e.cause);
+                throw e;
+            }
+        }
+    }
 }
 
 /**
@@ -49,18 +73,12 @@ export const startLocalBlockchain = async (
  */
 export const deploySmartContractsLocalChain = async (projectRootDir: string, startBlockNumber = 1, firstTimeDeploying: boolean) => {
     // Deploy
-    logSuccessWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
+    logInfoWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
 
-    let exitStat = shell.exec(`npx hardhat run --network localhost scripts${path.sep}deploy_localhost.ts`, {
+    shell.exec(`npx hardhat run --network localhost scripts${path.sep}deploy_localhost.ts`, {
         cwd: path.resolve(projectRootDir, "smart-contracts"),
         silent: true
     });
-    while (exitStat.stderr?.includes("Cannot connect to the network localhost")) {
-        exitStat = shell.exec(`npx hardhat run --network localhost scripts${path.sep}deploy_localhost.ts`, {
-            cwd: path.resolve(projectRootDir, "smart-contracts"),
-            silent: true
-        });
-    }
 
     const { contractsDeployedMap, blockNumberCurr } = await getDeployedSmartContractsLocalChain(projectRootDir, startBlockNumber);
 
@@ -68,7 +86,7 @@ export const deploySmartContractsLocalChain = async (projectRootDir: string, sta
     Object
         .entries(contractsDeployedMap)
         .forEach(([contractName, data]) => {
-            logInfoWithBg(`Contract deployed: ${contractName} -> ${data.contractAddress}`)
+            logSuccessWithBg(`Contract deployed: ${contractName} -> ${data.contractAddress}`)
         });
 
     return { contractsDeployedMap, blockNumberCurr };
@@ -116,6 +134,8 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
 
     for (let i = 0; i < blockTransactionReceipts.length; i++) {
         const artifact = artifacts.find((artifact) => artifact.bytecode === blockTransactionsContractDeployments[i].input);
+
+        if(!artifact) continue;
 
         contractsDeployedMap[artifact.contractName.toUpperCase()] = {
             contractAddress: blockTransactionReceipts[i].contractAddress,

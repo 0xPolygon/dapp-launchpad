@@ -1,16 +1,16 @@
 import { getCWD, isCWDProjectRootDirectory } from "../utils/project";
 import { logErrorWithBg } from "../utils/print";
 import chokidar from "chokidar";
-import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork } from "../utils/smart-contracts";
+import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, getSupportedNetworkConfig, waitForLocalBlockchainToStart } from "../utils/smart-contracts";
 import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file";
-import { startLocalFrontendDevServer } from "../utils/frontend";
+import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } from "../utils/frontend";
 import shelljs from "shelljs";
 import path from "path";
 
 /**
  * @description Command that runs on Dev
  */
-export const dev = async ({ forkNetwork, forkBlockNumber }: { forkNetwork?: string; forkBlockNumber?: string }) => {
+export const dev = async ({ forkNetworkName, forkBlockNumber }: { forkNetworkName?: string; forkBlockNumber?: string }) => {
     // Data
     let projectRootDir: string;
     let localBlockchainProcess: ReturnType<typeof shelljs.exec>;
@@ -47,21 +47,23 @@ export const dev = async ({ forkNetwork, forkBlockNumber }: { forkNetwork?: stri
 
         // Check if forking network is correct
         const supportedNetworks = getSupportedNetworkNames();
-        if (forkNetwork) {
-            if (!supportedNetworks.includes(forkNetwork)) {
+        if (forkNetworkName) {
+            if (!supportedNetworks.includes(forkNetworkName)) {
                 logErrorWithBg(`Network unsupported! Supported networks are: ${supportedNetworks.join(", ")}`);
                 return;
             } else {
                 if (forkBlockNumber) {
                     startBlockNumber = parseInt(forkBlockNumber);
                 } else {
-                    startBlockNumber = await getLatestBlockNumberOfNetwork(forkNetwork) - 500;
+                    const network = getSupportedNetworkConfig(forkNetworkName);
+                    startBlockNumber = await getLatestBlockNumberOfNetwork(forkNetworkName) - Math.ceil((5 * 60) / network.blockTime); // Start from a block 5 minutes before latest block, for stability
                 }
             }
         }
 
-        //// 1. Start local blockchain
-        localBlockchainProcess = await startLocalBlockchain(projectRootDir, { forkNetwork, forkBlockNumber: startBlockNumber });
+        //// 1. Start local blockchain and wait for it to start
+        localBlockchainProcess = await startLocalBlockchain(projectRootDir, { forkNetworkName, forkBlockNumber: startBlockNumber });
+        await waitForLocalBlockchainToStart(startBlockNumber);
 
         //// 2. Deploy smart contracts for the first time
         await _prepareSmartContracts();
@@ -78,8 +80,9 @@ export const dev = async ({ forkNetwork, forkBlockNumber }: { forkNetwork?: stri
         });
         watcher.on("change", _prepareSmartContracts);
 
-        //// 4 Start local frontend dev server
+        //// 4 Start local frontend dev server and wait for it to start
         localFrontendDevServerProcess = startLocalFrontendDevServer(projectRootDir);
+        await waitForLocalFrontendDevServerToStart();
 
         //// Keep running forever
         interval = setInterval(() => { }, 1 << 30);
