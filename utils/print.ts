@@ -47,7 +47,7 @@ export const logInfoWithBg = (...args: string[]) => {
  */
 export const logSuccess = (...args: string[]) => {
     console.log(
-        chalk.greenBright(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
+        chalk.greenBright(`[${getCurrentTimeInHumanRdFormat()}] ✔ `, ...args)
     );
 }
 
@@ -57,7 +57,7 @@ export const logSuccess = (...args: string[]) => {
  */
 export const logSuccessWithBg = (...args: string[]) => {
     console.log(
-        chalk.bgGreen.white(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
+        chalk.bgGreen.white(`[${getCurrentTimeInHumanRdFormat()}] ✔ `, ...args)
     );
 }
 
