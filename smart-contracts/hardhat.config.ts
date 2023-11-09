@@ -7,6 +7,20 @@ const config: HardhatUserConfig = {
     hardhat: {
       loggingEnabled: false
     },
+    ethereum: {
+      chainId: 1,
+      url: "https://rpc.ankr.com/eth",
+      forking: {
+        url: "https://rpc.ankr.com/eth"
+      }
+    },
+    goerli: {
+      chainId: 5,
+      url: "https://rpc.ankr.com/eth_goerli",
+      forking: {
+        url: "https://rpc.ankr.com/eth_goerli"
+      }
+    },
     polygonPos: {
       chainId: 137,
       url: "https://rpc.ankr.com/polygon",
