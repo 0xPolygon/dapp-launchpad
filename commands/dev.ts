@@ -1,7 +1,7 @@
 import { getCWD, isCWDProjectRootDirectory } from "../utils/project";
 import { logErrorWithBg } from "../utils/print";
 import chokidar from "chokidar";
-import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, getSupportedNetworkConfig, waitForLocalBlockchainToStart } from "../utils/smart-contracts";
+import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, waitForLocalBlockchainToStart } from "../utils/smart-contracts";
 import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file";
 import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } from "../utils/frontend";
 import shelljs from "shelljs";
@@ -89,8 +89,8 @@ export const dev = async ({ forkNetworkName, forkBlockNum }: { forkNetworkName?:
     } catch (e) {
         console.error(e);
         clearInterval(interval);
-        localBlockchainProcess!.kill("SIGINT");
-        localFrontendDevServerProcess!.kill("SIGINT");
+        localBlockchainProcess!?.kill("SIGINT");
+        localFrontendDevServerProcess!?.kill("SIGINT");
         await watcher?.close();
     }
 }
