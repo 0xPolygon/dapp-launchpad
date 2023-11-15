@@ -39,4 +39,5 @@ typechain-types
 typechain
 
 # smart contracts data
-src/constants/smart-contracts.json
+src/constants/smart-contracts-*.json
+src/constants/deployed-network-*.json

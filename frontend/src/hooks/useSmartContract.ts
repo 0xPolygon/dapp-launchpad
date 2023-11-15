@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useWallet } from "./useWallet";
-import contractsData from "@/constants/smart-contracts.json";
-import { ISmartContractsConstantJson } from "@/types/smart-contract";
+import { IDeployedNetworkConstantJson, ISmartContractsConstantJson } from "@/types/smart-contract";
+import { useEffect, useState } from "react";
 
 /**
  * 
@@ -9,6 +9,19 @@ import { ISmartContractsConstantJson } from "@/types/smart-contract";
  */
 export const useSmartContract = () => {
     const { ethersSigner, ethersProvider } = useWallet();
+    const [contractsData, setContractsData] = useState<ISmartContractsConstantJson>({});
+    const [deployedNetworkData, setDeployedNetworkData] = useState<IDeployedNetworkConstantJson>();
+
+    // Setup contracts data
+    useEffect(() => {
+        (async () => {
+            const contractsDataNew = await import(`@/constants/smart-contracts-${process.env.NODE_ENV === "production" ? "production" : "development"}.json`);
+            setContractsData(contractsDataNew);
+
+            const deployedNetworkDataNew = await import(`@/constants/deployed-network-${process.env.NODE_ENV === "production" ? "production" : "development"}.json`);
+            setDeployedNetworkData(deployedNetworkDataNew);
+        })();
+    }, []);
 
     /**
      * @description Gets names of all smart contracts
@@ -38,6 +51,9 @@ export const useSmartContract = () => {
     }
 
     return {
+        // Data
+        deployedNetworkData,
+
         // Methods
         getSmartContract,
         getAllSmartContractNames

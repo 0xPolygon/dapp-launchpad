@@ -15,6 +15,7 @@
     "@types/mocha": ">=9.1.0",
     "@types/node": ">=16.0.0",
     "chai": "^4.2.0",
+    "dotenv": "^16.3.1",
     "ethers": "^6.4.0",
     "hardhat": "^2.18.3",
     "hardhat-gas-reporter": "^1.0.8",

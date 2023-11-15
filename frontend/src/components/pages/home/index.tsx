@@ -8,8 +8,8 @@ import { useWallet } from "@/hooks/useWallet";
 export default function Home() {
     const [messageToPost, setMessageToPost] = useState("");
     const [allMessages, setAllMessages] = useState<Wall.MessageStructOutput[]>([]);
-    const { getSmartContract } = useSmartContract();
-    const { walletConnectionStatus, switchNetwork, chainCurrent, ethersSigner } = useWallet();
+    const { getSmartContract, deployedNetworkData } = useSmartContract();
+    const { walletConnectionStatus, switchNetwork, chainCurrent } = useWallet();
     const [poller, setPoller] = useState<ReturnType<typeof setInterval>>();
     const [error, setError] = useState("");
 
@@ -20,8 +20,8 @@ export default function Home() {
         setError("");
         const wallContract = getSmartContract<Wall>("WALL");
         try {
-            if (wallContract && walletConnectionStatus === "connected" && switchNetwork) {
-                switchNetwork(31337);
+            if (wallContract && walletConnectionStatus === "connected" && switchNetwork && deployedNetworkData) {
+                switchNetwork(deployedNetworkData.chainId);
 
                 await (await wallContract.postMessage(messageToPost)).wait();
                 syncMessages();
@@ -70,10 +70,10 @@ export default function Home() {
 
     // Switch chain
     useEffect(() => {
-        if (chainCurrent?.id !== 31337) {
-            switchNetwork && switchNetwork(31337);
+        if (chainCurrent?.id !== deployedNetworkData?.chainId) {
+            switchNetwork && switchNetwork(deployedNetworkData?.chainId);
         }
-    }, [switchNetwork])
+    }, [chainCurrent, deployedNetworkData])
 
     return (
         <div className={styles.home}>
