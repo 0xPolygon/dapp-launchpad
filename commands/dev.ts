@@ -33,7 +33,7 @@ export const dev = async ({ forkNetworkName, forkBlockNum }: { forkNetworkName?:
         writeTypechainTypesToFrontend(projectRootDir);
 
         // Patch in new contract data in frontend app
-        writeSmartContractsDataToFrontend(projectRootDir, "development", contractsDeployedMap);
+        writeSmartContractsDataToFrontend(projectRootDir, "development", contractsDeployedMap, forkNetworkName ?? "localhost");
     }
 
     try {

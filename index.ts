@@ -3,6 +3,7 @@
 import { program } from "commander";
 import { dev } from "./commands/dev";
 import { init } from "./commands/init";
+import { deploy } from "./commands/deploy";
 
 /// Metadata
 program
@@ -26,6 +27,15 @@ program
     .option("-n, --fork-network-name [NAME]", "Name of the network to fork; optional. By default, it starts a new chain from genesis block.")
     .option("-b, --fork-block-num [number]", "Block number to fork at. By default, it's the latest block.")
     .action(dev);
+
+// Deploy
+  program
+    .command("deploy")
+    .description("Deploys the smart contracts and frontend app to production")
+    .option("-n, --network-name <NAME>", "Name of the network to deploy smart contracts to.")
+    .option("--only-smart-contracts", "Deploys only smart contracts and updates `smart-contracts-production.json`")
+    .option("--only-frontend", "Deploys only smart contracts and updates `smart-contracts-production.json`")
+    .action(deploy);
 
 // Parse program
 program.parse();

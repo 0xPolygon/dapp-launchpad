@@ -1,10 +1,12 @@
 {
     "localhost": {
         "chainId": 31337,
+        "name": "Hardhat",
         "url": "http://127.0.0.1:8545"
     },
     "ethereum": {
         "chainId": 1,
+        "name": "Ethereum",
         "url": "https://rpc.ankr.com/eth",
         "forking": {
             "url": "https://rpc.ankr.com/eth"
@@ -13,6 +15,7 @@
     },
     "goerli": {
         "chainId": 5,
+        "name": "Goerli",
         "url": "https://rpc.ankr.com/eth_goerli",
         "forking": {
             "url": "https://rpc.ankr.com/eth_goerli"
@@ -21,6 +24,7 @@
     },
     "polygonPos": {
         "chainId": 137,
+        "name": "Polygon PoS",
         "url": "https://rpc.ankr.com/polygon",
         "forking": {
             "url": "https://rpc.ankr.com/polygon"
@@ -29,6 +33,7 @@
     },
     "polygonMumbai": {
         "chainId": 80001,
+        "name": "Polygon Mumbai",
         "url": "https://rpc.ankr.com/polygon_mumbai",
         "forking": {
             "url": "https://rpc.ankr.com/polygon_mumbai"
@@ -37,6 +42,7 @@
     },
     "polygonZkevm": {
         "chainId": 1101,
+        "name": "Polygon ZkEVM",
         "url": "https://rpc.ankr.com/polygon_zkevm",
         "forking": {
             "url": "https://rpc.ankr.com/polygon_zkevm"
@@ -45,6 +51,7 @@
     },
     "polygonZkevmTestnet": {
         "chainId": 1442,
+        "name": "Polygon ZkEVM Testnet",
         "url": "https://rpc.public.zkevm-test.net",
         "forking": {
             "url": "https://rpc.public.zkevm-test.net"

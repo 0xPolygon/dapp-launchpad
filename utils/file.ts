@@ -1,5 +1,6 @@
 import shell from "shelljs";
 import path from "path";
+import networksMap from "../config/networks.json";
 
 /**
  * @description Copies typechain types to frontend
@@ -26,14 +27,18 @@ export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
  * @description Writes smart contracts data to frontend
  * @param projectRootDir Project root directory
  * @param env Environment
- * @param data Data to write
+ * @param smartContractsData Smart contract data to write
+ * @param networkName Network name where contracts are deployed
  */
-export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: "development" | "production" = "development", data: any) => {
+export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: "development" | "production" = "development", smartContractsData: any, networkName: any) => {
     const constantsDir = path.resolve(projectRootDir, "frontend", "src", "constants");
     if (!shell.test("-d", constantsDir)) {
         shell.mkdir("-p", constantsDir);
     }
 
-    new shell.ShellString(JSON.stringify(data))
-        .to(path.resolve(projectRootDir, "frontend", "src", "constants", "smart-contracts.json"));
+    new shell.ShellString(JSON.stringify(smartContractsData))
+        .to(path.resolve(projectRootDir, "frontend", "src", "constants", `smart-contracts-${env}.json`));
+
+    new shell.ShellString(JSON.stringify((networksMap as any)[networkName]))
+        .to(path.resolve(projectRootDir, "frontend", "src", "constants", `deployed-network-${env}.json`));
 }

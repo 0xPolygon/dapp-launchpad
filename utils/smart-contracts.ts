@@ -158,6 +158,95 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
 }
 
 /**
+ * @description Runs the deploy script to deploy all smart contracts for production
+ * @param projectRootDir Project root directory
+ * @param networkName Name of the chain on which to deploy contracts
+ * @returns Map of deployed smart contract names to their details
+ */
+export const deploySmartContractsProduction = async (projectRootDir: string, networkName: string) => {
+    // Deploy
+    logInfoWithBg(`Deploying smart contracts on ${(networksMap as any)[networkName].name}`);
+
+    const blockNumPreDeployment = await getLatestBlockNumberOfNetwork(networkName);
+    const res = shell.exec(`npx hardhat run --network ${networkName} scripts${path.sep}deploy_prod.ts`, {
+        cwd: path.resolve(projectRootDir, "smart-contracts"),
+        silent: true
+    });
+    if (res.stderr) {
+        throw Error(res.stderr);
+    }
+    const blockNumPostDeployment = await getLatestBlockNumberOfNetwork(networkName);
+
+    const { contractsDeployedMap } = await getDeployedSmartContractsProduction(projectRootDir, networkName, blockNumPreDeployment, blockNumPostDeployment);
+
+    // Log data
+    Object
+        .entries(contractsDeployedMap)
+        .forEach(([contractName, data]) => {
+            logSuccessWithBg(`Contract deployed: ${contractName} -> ${data.contractAddress}`)
+        });
+
+    return { contractsDeployedMap };
+}
+
+/**
+ * @description Gets smart contracts data deployed on local chain
+ * @param projectRootDir Root directory of the project
+ * @param networkName Network from where to enumerate
+ * @param blockNumStart Block number to start enumerating from
+ * @param blockNumEnd Block number to end enumerating at
+ * @returns `contractsDeployedLatest` - Map of contract name to contract details (latest only)
+ */
+export const getDeployedSmartContractsProduction = async (projectRootDir: string, networkName: string, blockNumStart: number, blockNumEnd: number) => {
+    // For each block number, starting from `blockNumStart`, get block transactions, and filter by which ones are Contract deployment transactions
+    const blockTransactionsContractDeployments: Array<{ to: string, input: string, hash: string }> = [];
+    const transactionsQueryPromises = [];
+    const providerProduction = new ethers.JsonRpcProvider((networksMap as any)[networkName].url);
+    for (let blockNumberToQuery = blockNumStart; blockNumberToQuery <= blockNumEnd; blockNumberToQuery++) {
+        transactionsQueryPromises.push(
+            (async () => {
+                const blockTransactions: Array<{ to: string, input: string, hash: string }> = (await providerProduction.send("eth_getBlockByNumber", [`0x${blockNumberToQuery.toString(16)}`, true]))?.transactions ?? [];
+                blockTransactionsContractDeployments.push(
+                    ...(blockTransactions.filter((tx) => tx.to === null))
+                );
+            })()
+        );
+    }
+    await Promise.all(transactionsQueryPromises);
+
+    // For all above found transactions, get their receipts
+    const blockTransactionReceipts = await Promise.all(
+        blockTransactionsContractDeployments.map((tx) => (
+            providerProduction.send("eth_getTransactionReceipt", [tx.hash])
+        ))
+    );
+
+    // For all found transactions, get their Contract address, bytecode and name
+    const contractsDeployedMap: { [contractName: string]: { contractAddress: string; bytecode: string; abi: any } } = {};
+    const artifactFilesPath = shell
+        .ls("-R", [path.resolve(projectRootDir, "smart-contracts", "artifacts", "contracts", `**${path.sep}*.json`)])
+        .filter((path) => !path.endsWith(".dbg.json"));
+    const artifacts = artifactFilesPath.map((path) => JSON.parse(shell.cat(path)));
+
+    for (let i = 0; i < blockTransactionReceipts.length; i++) {
+        const artifact = artifacts.find((artifact) => artifact.bytecode === blockTransactionsContractDeployments[i].input);
+
+        if (!artifact) continue;
+
+        contractsDeployedMap[artifact.contractName.toUpperCase()] = {
+            contractAddress: blockTransactionReceipts[i].contractAddress,
+            bytecode: artifact.bytecode,
+            abi: artifact.abi
+        }
+    }
+
+    // Return data
+    return {
+        contractsDeployedMap,
+    };
+}
+
+/**
  * @description Gets names of supported Network names in Hardhat
  * @returns Array of names
  */
