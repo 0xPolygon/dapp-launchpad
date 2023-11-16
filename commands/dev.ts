@@ -1,7 +1,7 @@
 import { getCWD, isCWDProjectRootDirectory } from "../utils/project";
 import { logErrorWithBg } from "../utils/print";
 import chokidar from "chokidar";
-import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, waitForLocalBlockchainToStart } from "../utils/smart-contracts";
+import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, waitForLocalBlockchainToStart, resetLocalBlockchain } from "../utils/smart-contracts";
 import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file";
 import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } from "../utils/frontend";
 import shelljs from "shelljs";
@@ -10,7 +10,7 @@ import path from "path";
 /**
  * @description Command that runs on Dev
  */
-export const dev = async ({ forkNetworkName, forkBlockNum }: { forkNetworkName?: string; forkBlockNum?: string }) => {
+export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange }: { forkNetworkName?: string; forkBlockNum?: string, resetOnChange?: boolean }) => {
     // Data
     let projectRootDir: string;
     let localBlockchainProcess: ReturnType<typeof shelljs.exec>;
@@ -18,14 +18,24 @@ export const dev = async ({ forkNetworkName, forkBlockNum }: { forkNetworkName?:
     let watcher;
     let interval;
     let startBlockNumber = 1;
+    let blockNumberLastIndexed = 1;
     let contractsDeployedMap = {};
     let firstTimeDeploying = true;
 
     // Functions
     const _prepareSmartContracts = async () => {
+        // Reset chain if needed
+        if(!firstTimeDeploying && resetOnChange) {
+            await resetLocalBlockchain({
+                startBlockNumber: startBlockNumber,
+                networkName: forkNetworkName
+            });
+            blockNumberLastIndexed = startBlockNumber;
+        }
+
         // Deploy contracts
-        const { contractsDeployedMap: contractsDeployedMapNew, blockNumberCurr } = await deploySmartContractsLocalChain(projectRootDir, startBlockNumber, firstTimeDeploying);
-        startBlockNumber = blockNumberCurr + 1;
+        const { contractsDeployedMap: contractsDeployedMapNew, blockNumberCurr } = await deploySmartContractsLocalChain(projectRootDir, blockNumberLastIndexed, firstTimeDeploying);
+        blockNumberLastIndexed = blockNumberCurr + 1;
         firstTimeDeploying = false;
         contractsDeployedMap = { ...contractsDeployedMap, ...contractsDeployedMapNew };
 
@@ -53,17 +63,18 @@ export const dev = async ({ forkNetworkName, forkBlockNum }: { forkNetworkName?:
                 return;
             } else {
                 if (forkBlockNum) {
-                    startBlockNumber = parseInt(forkBlockNum);
+                    blockNumberLastIndexed = parseInt(forkBlockNum);
                 }
                 else {
-                    startBlockNumber = await getLatestBlockNumberOfNetwork(forkNetworkName);
+                    blockNumberLastIndexed = await getLatestBlockNumberOfNetwork(forkNetworkName);
                 }
+                startBlockNumber = blockNumberLastIndexed;
             }
         }
 
         //// 1. Start local blockchain and wait for it to start
-        localBlockchainProcess = await startLocalBlockchain(projectRootDir, { forkNetworkName, forkBlockNumber: startBlockNumber });
-        await waitForLocalBlockchainToStart(startBlockNumber);
+        localBlockchainProcess = await startLocalBlockchain(projectRootDir, { forkNetworkName, forkBlockNumber: blockNumberLastIndexed });
+        await waitForLocalBlockchainToStart(blockNumberLastIndexed);
 
         //// 2. Deploy smart contracts for the first time
         await _prepareSmartContracts();

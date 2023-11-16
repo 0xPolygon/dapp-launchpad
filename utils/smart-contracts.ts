@@ -48,6 +48,35 @@ export const startLocalBlockchain = async (
 }
 
 /**
+ * @description Resets blockchain back to initial state
+ * @param additionalOptions Additional options 
+ */
+export const resetLocalBlockchain = async ({ startBlockNumber, networkName }: {
+    networkName?: string,
+    startBlockNumber?: string | number
+} = {}) => {
+    await providerLocalBlockchain.send(
+        "hardhat_reset",
+        networkName
+            ? [
+                {
+                    forking: {
+                        jsonRpcUrl: (networksMap as any)[networkName].forking.url,
+                        blockNumber: startBlockNumber,
+                    },
+                },
+            ]
+            : []);
+
+    logInfoWithBg(
+        networkName
+            ? `Blockchain reset; back to block#${startBlockNumber}`
+            : `Blockchain reset`
+    );
+}
+
+
+/**
  * @description Waits for local blockchain to start
  */
 export const waitForLocalBlockchainToStart = async (forkBlockNumber: number) => {
