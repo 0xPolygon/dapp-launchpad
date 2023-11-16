@@ -63,17 +63,10 @@ export const loginToVercel = async (projectRootDir: string) => {
  */
 export const deployFrontendToProduction = async (projectRootDir: string) => {
     async function _performDeployment() {
-        // Env vars
-        const envVars = [
-            "NODE_ENV=production"
-        ];
-
         // Run deploy command
         await runChildProcess(
             "npx vercel deploy",
             [
-                ...envVars.map((val) => `--build-env ${val}`),
-                ...envVars.map((val) => `--env ${val}`),
                 "--prod",
                 "--force"
             ],
