@@ -1,15 +1,29 @@
 {
-  "name": "polygon-scaffold-tool",
+  "name": "@0xpolygon/polygon-dapp-scaffold",
   "version": "1.0.0",
+  "description": "CLI tool to initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.",
   "license": "MIT",
   "bin": {
-    "poly-scaffold": "./bin/cli.js"
+    "create-polygon-dapp": "./bin/cli.js"
   },
   "type": "module",
   "scripts": {
     "build": "rollup -c",
     "install-global": "npm i -g --force",
     "dev": "rollup --watch --watch.onEnd 'npm run install-global' -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xpolygon/polygon-dapp-scaffold.git"
+  },
+  "keywords": ["dapp toolkit", "web3 project template", "web3 project starter", "polygon"],
+  "bugs": {
+    "url": "https://github.com/0xPolygon/polygon-dapp-scaffold/issues"
+  },
+  "author": {
+    "name": "Sohail Saha",
+    "email": "sohailsaha@polygon.technology",
+    "url": "https://twitter.com/realCaptainWoof"
   },
   "dependencies": {
     "chalk": "^5.3.0",

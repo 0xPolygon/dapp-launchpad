@@ -7,16 +7,16 @@ import { deploy } from "./commands/deploy";
 
 /// Metadata
 program
-  .name('poly-scaffold')
-  .description('CLI tool to initialise a fully-integrated Polygon project and interact with it')
-  .version('0.0.1 (beta)');
+  .name('create-polygon-dapp')
+  .description('CLI tool to initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.')
+  .version('1.0.0');
 
 //// Add commands
 
 // Init
 program
     .command("init")
-    .description("Initialises a Poly-Scaffold project in the current directory")
+    .description("Initialises a Polygon DApp project in a new directory")
     .argument("[project-name]", "Name of the project; optional")
     .action(init);
 
