@@ -46,5 +46,5 @@ export const init = (projectName: string) => {
         { cwd: projectRootDir }
     );
 
-    logSuccessWithBg(`Project scaffolded! For help, go to '${projectRootDirName}' and type 'poly-scaffold help'.`);
+    logSuccessWithBg(`Project scaffolded! For help, go to '${projectRootDirName}' and type 'create-polygon-dapp help'.`);
 }

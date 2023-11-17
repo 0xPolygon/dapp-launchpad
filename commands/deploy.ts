@@ -12,7 +12,7 @@ export const deploy = async ({ networkName, onlySmartContracts, onlyFrontend }: 
         //// 0. Do checks
         // Check if it's project directory
         if (!isCWDProjectRootDirectory()) {
-            logErrorWithBg("You're not in your Poly-Scaffold project root directory!");
+            logErrorWithBg("You're not in your Polygon DApp Scaffold project root directory!");
             return;
         }
         const projectRootDir = getCWD();

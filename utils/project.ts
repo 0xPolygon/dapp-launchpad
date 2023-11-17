@@ -2,7 +2,7 @@ import shell from "shelljs";
 import path from "path";
 
 /**
- * @description Gets Poly-Scaffold project's root directory
+ * @description Gets Polygon DApp Scaffold project's root directory
  * @return Project root
  */
 export const getCWD = () => {
