@@ -16,7 +16,12 @@
     "type": "git",
     "url": "git+https://github.com/0xpolygon/polygon-dapp-scaffold.git"
   },
-  "keywords": ["dapp toolkit", "web3 project template", "web3 project starter", "polygon"],
+  "keywords": [
+    "dapp toolkit",
+    "web3 project template",
+    "web3 project starter",
+    "polygon"
+  ],
   "bugs": {
     "url": "https://github.com/0xPolygon/polygon-dapp-scaffold/issues"
   },
