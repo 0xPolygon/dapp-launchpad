@@ -219,7 +219,12 @@ To report a bug or request a feature, [create an issue](https://github.com/0xPol
 
 ## FAQs
 
-### Why does Metamask fail in sending transactions when using "reset on change" option in dev environment?
+### Why does Metamask fail in sending transactions in dev environment with a nonce error?
+Everytime the dev environment is started, a new local test chain is started. Metamask internally maintains a cache of "latest block number" and "account transaction nonce". Since every run of `dev` creates a new chain, it never matches with this cache.
+
+To know how to clear the cache, [read this](https://support.metamask.io/hc/en-us/articles/360015488891-How-to-clear-your-account-activity-reset-account).
+
+### Why does Metamask fail in sending transactions with a nonce error when using "reset on change" option in dev environment?
 The reset on change option resets the blockchain on every code change. Metamask internally maintains a cache of "latest block number" and "account transaction nonce". After resetting the chain, the latest block number and account transaction nonce should go back to initial state as well, but Metamask does not update this cache on its own.
 
 To know how to clear the cache, [read this](https://support.metamask.io/hc/en-us/articles/360015488891-How-to-clear-your-account-activity-reset-account).
