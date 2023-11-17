@@ -19,7 +19,7 @@ export const init = (projectName: string) => {
     // Clone scaffold directory
     logInfoWithBg("Cloning scaffolded project repo")
     shelljs.exec(
-        `git clone --branch scaffolded-project https://github.com/0xpolygon/poly-scaffold ${projectRootDirName}`,
+        `git clone --branch scaffolded-project https://github.com/0xpolygon/polygon-dapp-scaffold ${projectRootDirName}`,
         { cwd }
     );
 
