@@ -9,7 +9,7 @@ import { deploy } from "./commands/deploy";
 program
   .name('create-polygon-dapp')
   .description('CLI tool to initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.')
-  .version('1.0.0');
+  .version('0.1.0');
 
 //// Add commands
 
