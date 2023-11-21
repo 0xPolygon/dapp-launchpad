@@ -6,7 +6,7 @@ import path from "path";
 export const init = (projectName: string) => {
     // Check if GIT exists
     if (!shelljs.which("git")) {
-        logErrorWithBg("You need GIT to initialise the project. To know how, please refer https://github.com/git-guides/install-git.");
+        logErrorWithBg("To initialize the project, you will need to have Git installed. For instructions on how to do this, please refer to the following link: https://github.com/git-guides/install-git.");
         return;
     }
 
