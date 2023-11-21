@@ -37,7 +37,7 @@ export const useWallet = () => {
         // Data
         isConnectDialogOpen,
         walletAddress,
-        walletConnectionStatus: (walletConnectionStatus === "connected") ? (ethersSigner ? "connected" : "connecting") : walletConnectionStatus,
+        walletConnectionStatus: ((walletConnectionStatus === "connected") ? (ethersSigner ? "connected" : "connecting") : walletConnectionStatus) as ("disconnected" | "connected" | "reconnecting" | "connecting"),
         ethersProvider,
         chainCurrent,
         ethersSigner,

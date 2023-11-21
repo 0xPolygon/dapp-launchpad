@@ -35,4 +35,6 @@ contract Wall {
     function getAllPostedMessages() external view returns (Message[] memory) {
         return messages;
     }
+
+    
 }
