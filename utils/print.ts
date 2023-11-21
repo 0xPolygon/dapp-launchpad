@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { getCurrentTimeInHumanRdFormat } from "./time";
+import { getCurrentHumanReadableTime } from "./time";
 
 /**
  * @description Logs an error
@@ -7,7 +7,7 @@ import { getCurrentTimeInHumanRdFormat } from "./time";
  */
 export const logError = (...args: string[]) => {
     console.log(
-        chalk.redBright(`[${getCurrentTimeInHumanRdFormat()}] ! `, ...args)
+        chalk.redBright(`[${getCurrentHumanReadableTime()}] ! `, ...args)
     );
 }
 
@@ -17,7 +17,7 @@ export const logError = (...args: string[]) => {
  */
 export const logErrorWithBg = (...args: string[]) => {
     console.log(
-        chalk.bgRed.white(`[${getCurrentTimeInHumanRdFormat()}] ! `, ...args)
+        chalk.bgRed.white(`[${getCurrentHumanReadableTime()}] ! `, ...args)
     );
 }
 
@@ -27,7 +27,7 @@ export const logErrorWithBg = (...args: string[]) => {
  */
 export const logInfo = (...args: string[]) => {
     console.log(
-        chalk.blueBright(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
+        chalk.blueBright(`[${getCurrentHumanReadableTime()}] > `, ...args)
     );
 }
 
@@ -37,7 +37,7 @@ export const logInfo = (...args: string[]) => {
  */
 export const logInfoWithBg = (...args: string[]) => {
     console.log(
-        chalk.bgBlue.white(`[${getCurrentTimeInHumanRdFormat()}] > `, ...args)
+        chalk.bgBlue.white(`[${getCurrentHumanReadableTime()}] > `, ...args)
     );
 }
 
@@ -47,7 +47,7 @@ export const logInfoWithBg = (...args: string[]) => {
  */
 export const logSuccess = (...args: string[]) => {
     console.log(
-        chalk.greenBright(`[${getCurrentTimeInHumanRdFormat()}] ✔ `, ...args)
+        chalk.greenBright(`[${getCurrentHumanReadableTime()}] ✔ `, ...args)
     );
 }
 
@@ -57,7 +57,7 @@ export const logSuccess = (...args: string[]) => {
  */
 export const logSuccessWithBg = (...args: string[]) => {
     console.log(
-        chalk.bgGreen.white(`[${getCurrentTimeInHumanRdFormat()}] ✔ `, ...args)
+        chalk.bgGreen.white(`[${getCurrentHumanReadableTime()}] ✔ `, ...args)
     );
 }
 

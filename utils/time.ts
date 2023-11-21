@@ -20,7 +20,7 @@ export const getCurrentTime = () => {
  * @description Gets current time in human readable format
  * @returns Current time
  */
-export const getCurrentTimeInHumanRdFormat = () => {
+export const getCurrentHumanReadableTime = () => {
     const dateNow = new Date();
 
     return `${dateNow.getHours().toString().padStart(2, "0")}:${dateNow.getMinutes().toString().padStart(2, "0")}` // HH:MM
