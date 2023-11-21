@@ -48,7 +48,7 @@ To start a development environment, use:
 create-polygon-dapp dev
 ```
 
-And this will start a fully integrated dev environment - a local dev blockchain and a local Frontend dev server! Any change in the code automatically updates both the frontend and the smart contracts; no manual change is necessary!
+And this will start a fully integrated dev environment - a local dev blockchain and a local Frontend dev server! Any change in the code automatically updates both the frontend and the smart contracts; no manual reload is necessary!
 
 This will also generate some funded test wallets for you in this test chain, which you can use to develop your DApp.
 
