@@ -60,4 +60,3 @@ export const logSuccessWithBg = (...args: string[]) => {
         chalk.bgGreen.white(`[${getCurrentHumanReadableTime()}] ✔ `, ...args)
     );
 }
-
