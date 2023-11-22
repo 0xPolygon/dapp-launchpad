@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import packageJson from "./package.json";
 import { program } from "commander";
 import { dev } from "./commands/dev";
 import { init } from "./commands/init";
@@ -9,7 +9,7 @@ import { deploy } from "./commands/deploy";
 program
   .name('create-polygon-dapp')
   .description('CLI tool to initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.')
-  .version('0.1.0');
+  .version(packageJson.version);
 
 //// Add commands
 
