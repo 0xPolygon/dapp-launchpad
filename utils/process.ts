@@ -1,8 +1,9 @@
 import cp from "child_process";
 
 interface IRunChildProcessOptions {
-    mode?: "sync" | "sync-interactive" | "background",
-    cwd?: string
+    mode?: "sync" | "sync-interactive" | "background";
+    cwd?: string;
+    env?: { [envName: string]: string };
 }
 
 interface IRunChildProcessReturn {
@@ -24,37 +25,41 @@ export const runChildProcess = (command: string, args: Array<any> = [], options:
         // Spawn child process
         let stdoutChunks: Array<Uint8Array> = [], stderrChunks: Array<Uint8Array> = [];
         let stdoutContent = "", stderrContent = "";
-        const process = cp.spawn(command, args, {
+        const childProcess = cp.spawn(command, args, {
             cwd: options.cwd,
             detached: options.mode === "background",
             shell: true,
-            stdio: options.mode === "sync-interactive" ? "inherit" : "pipe"
+            stdio: options.mode === "sync-interactive" ? "inherit" : "pipe",
+            env: {
+                ...process.env,
+                ...(options.env ?? {})
+            }
         });
 
         // Attach listeners
-        process.stdout?.on('data', (data) => {
+        childProcess.stdout?.on('data', (data) => {
             stdoutChunks = stdoutChunks.concat(data);
         });
 
-        process.stdout?.on('end', () => {
+        childProcess.stdout?.on('end', () => {
             stdoutContent = Buffer.concat(stdoutChunks).toString();
         });
 
-        process.stderr?.on('data', (data) => {
+        childProcess.stderr?.on('data', (data) => {
             stderrChunks = stderrChunks.concat(data);
         });
-        process.stderr?.on('end', () => {
+        childProcess.stderr?.on('end', () => {
             stderrContent = Buffer.concat(stderrChunks).toString();
         });
-        process.on("exit", (code) => {
+        childProcess.on("exit", (code) => {
             return code === 0
-                ? resolve({ process, code, stdoutContent, stderrContent })
-                : reject({ process, code, stdoutContent, stderrContent });
+                ? resolve({ process: childProcess, code, stdoutContent, stderrContent })
+                : reject({ process: childProcess, code, stdoutContent, stderrContent });
         });
 
         // Return child process
         if (options.mode === "background") {
-            return resolve({ process, code: null, stdoutContent: "", stderrContent: "" });
+            return resolve({ process: childProcess, code: null, stdoutContent: "", stderrContent: "" });
         }
     });
 }
