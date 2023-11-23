@@ -1,16 +1,26 @@
 import { getCWD, isCWDProjectRootDirectory } from "../utils/project";
-import { logErrorWithBg } from "../utils/print";
+import { logErrorWithBg, logInfoWithBg } from "../utils/print";
 import chokidar from "chokidar";
-import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, waitForLocalBlockchainToStart, resetLocalBlockchain } from "../utils/smart-contracts";
+import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, waitForLocalBlockchainToStart, resetLocalBlockchain, syncLocalhostWithEthernal, resetEthernal, getEthernalParams } from "../utils/smart-contracts";
 import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from "../utils/file";
 import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } from "../utils/frontend";
 import shelljs from "shelljs";
 import path from "path";
 
+interface IDevCommandOptions {
+    forkNetworkName?: string;
+    forkBlockNum?: string;
+    resetOnChange?: boolean;
+    enableExplorer?: boolean;
+    ethernalLoginEmail?: string;
+    ethernalLoginPassword?: string;
+    ethernalWorkspace?: string;
+}
+
 /**
  * @description Command that runs on Dev
  */
-export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange }: { forkNetworkName?: string; forkBlockNum?: string, resetOnChange?: boolean }) => {
+export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enableExplorer: enableEthernal, ethernalLoginEmail, ethernalLoginPassword, ethernalWorkspace }: IDevCommandOptions) => {
     // Data
     let projectRootDir: string;
     let localBlockchainProcess: ReturnType<typeof shelljs.exec>;
@@ -24,8 +34,14 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange }: { fo
 
     // Functions
     const _prepareSmartContracts = async () => {
+        // Reset Ethernal, and log
+        if (enableEthernal) {
+            await resetEthernal(projectRootDir, ethernalLoginEmail, ethernalLoginPassword, ethernalWorkspace);
+            logInfoWithBg("Access local blockchain explorer -> https://app.tryethernal.com/")
+        }
+
         // Reset chain if needed
-        if(!firstTimeDeploying && resetOnChange) {
+        if (!firstTimeDeploying && resetOnChange) {
             await resetLocalBlockchain({
                 startBlockNumber: startBlockNumber,
                 networkName: forkNetworkName
@@ -34,10 +50,15 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange }: { fo
         }
 
         // Deploy contracts
-        const { contractsDeployedMap: contractsDeployedMapNew, blockNumberCurr } = await deploySmartContractsLocalChain(projectRootDir, blockNumberLastIndexed, firstTimeDeploying);
+        const { contractsDeployedMap: contractsDeployedMapNew, blockNumberCurr } = await deploySmartContractsLocalChain(projectRootDir, blockNumberLastIndexed, firstTimeDeploying, enableEthernal, ethernalLoginEmail, ethernalLoginPassword);
         blockNumberLastIndexed = blockNumberCurr + 1;
         firstTimeDeploying = false;
         contractsDeployedMap = { ...contractsDeployedMap, ...contractsDeployedMapNew };
+
+        // Sync with Ethernal
+        if (enableEthernal) {
+            syncLocalhostWithEthernal(projectRootDir, contractsDeployedMap);
+        }
 
         // Copy new typechain types to frontend app
         writeTypechainTypesToFrontend(projectRootDir);
@@ -72,8 +93,22 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange }: { fo
             }
         }
 
+        // Check if Ethernal credentials are present
+        const ethernalConfigs = getEthernalParams({ enableEthernal: true, ethernalLoginEmail, ethernalLoginPassword, projectRootDir, ethernalWorkspace })
+        if (enableEthernal && !(ethernalConfigs.env.ETHERNAL_EMAIL && ethernalConfigs.env.ETHERNAL_PASSWORD && ethernalConfigs.env.ETHERNAL_WORKSPACE)) {
+            logErrorWithBg("Enabling the explorer requires Ethernal credentials, either with options (--ethernal-login-email, --ethernal-login-password, --ethernal-workspace) or in the .env");
+            return;
+        }
+
         //// 1. Start local blockchain and wait for it to start
-        localBlockchainProcess = await startLocalBlockchain(projectRootDir, { forkNetworkName, forkBlockNumber: blockNumberLastIndexed });
+        localBlockchainProcess = await startLocalBlockchain(projectRootDir, {
+            forkNetworkName,
+            forkBlockNumber: blockNumberLastIndexed,
+            enableEthernal: enableEthernal,
+            ethernalLoginEmail,
+            ethernalLoginPassword,
+            ethernalWorkspace
+        });
         await waitForLocalBlockchainToStart(blockNumberLastIndexed);
 
         //// 2. Deploy smart contracts for the first time

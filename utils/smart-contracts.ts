@@ -4,6 +4,9 @@ import { ethers } from "ethers";
 import { waitFor } from "./time";
 import networksMap from "../config/networks.json";
 import path from "path";
+import dotenv from "dotenv";
+import { IContractDeploymentMap } from "../types/constants";
+import { runChildProcess } from "./process";
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -16,9 +19,13 @@ const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:854
  */
 export const startLocalBlockchain = async (
     projectRootDir: string,
-    { forkBlockNumber, forkNetworkName }: {
-        forkNetworkName?: string,
-        forkBlockNumber?: string | number
+    { forkBlockNumber, forkNetworkName, ethernalLoginEmail, ethernalLoginPassword, enableEthernal, ethernalWorkspace }: {
+        forkNetworkName?: string;
+        forkBlockNumber?: string | number;
+        enableEthernal?: boolean;
+        ethernalLoginEmail?: string;
+        ethernalLoginPassword?: string;
+        ethernalWorkspace?: string;
     } = {}
 ) => {
     // Fork params
@@ -31,20 +38,28 @@ export const startLocalBlockchain = async (
         ? `--fork-block-number ${forkBlockNumber}`
         : "";
 
+    // Ethernal params
+    const ethernalParams = getEthernalParams({ ethernalLoginEmail, ethernalLoginPassword, enableEthernal, projectRootDir, ethernalWorkspace });
+
     // Start process
-    const process = shell.exec(`npx hardhat node ${forkNetworkParam} ${forkBlockNumberParam}`, {
+    const localBlockchainProcess = shell.exec(`npx hardhat ${ethernalParams.config} node ${forkNetworkParam} ${forkBlockNumberParam}`, {
         async: true,
-        cwd: path.resolve(projectRootDir, "smart-contracts")
+        cwd: path.resolve(projectRootDir, "smart-contracts"),
+        env: {
+            ...process.env,
+            // For Ethernal
+            ...ethernalParams.env
+        }
     });
-    process.on("spawn", () => {
+    localBlockchainProcess.on("spawn", () => {
         logInfoWithBg("Starting local test blockchain");
     });
-    process.on("close", () => {
+    localBlockchainProcess.on("close", () => {
         logErrorWithBg("Local test blockchain stopped");
     });
 
     // Return process
-    return process;
+    return localBlockchainProcess;
 }
 
 /**
@@ -104,15 +119,26 @@ export const waitForLocalBlockchainToStart = async (forkBlockNumber: number) => 
  * @description Runs the deploy script to deploy all smart contracts on local chain
  * @param projectRootDir Project root directory
  * @param firstTimeDeploying True, if it's the first time this function is called
+ * @param enableEthernal True, if Ethernal is to be enabled
+ * @param ethernalLoginEmail Ethernal login email; not needed if in env
+ * @param ethernalLoginPassword Ethernal login password; not needed if in env
+ * @param ethernalWorkspace Ethernal workspace; not needed if in env
  * @returns Map of deployed smart contract names to their details
  */
-export const deploySmartContractsLocalChain = async (projectRootDir: string, startBlockNumber = 1, firstTimeDeploying: boolean) => {
-    // Deploy
+export const deploySmartContractsLocalChain = async (projectRootDir: string, startBlockNumber = 1, firstTimeDeploying: boolean, enableEthernal?: boolean, ethernalLoginEmail?: string,
+    ethernalLoginPassword?: string, ethernalWorkspace?: string) => {
     logInfoWithBg(`${firstTimeDeploying ? "Deploying" : "Redeploying"} smart contracts on local chain`);
+    // Ethernal params
+    const ethernalParams = getEthernalParams({ ethernalLoginEmail, ethernalLoginPassword, enableEthernal, projectRootDir, ethernalWorkspace });
 
-    shell.exec(`npx hardhat run --network localhost scripts${path.sep}deploy_localhost.ts`, {
+    // Deploy
+    shell.exec(`npx hardhat ${ethernalParams.config} run --network localhost scripts${path.sep}deploy_localhost.ts`, {
         cwd: path.resolve(projectRootDir, "smart-contracts"),
-        silent: true
+        silent: true,
+        env: {
+            ...process.env,
+            ...ethernalParams.env
+        }
     });
 
     const { contractsDeployedMap, blockNumberCurr } = await getDeployedSmartContractsLocalChain(projectRootDir, startBlockNumber);
@@ -161,7 +187,7 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
     );
 
     // For all found transactions, get their Contract address, bytecode and name
-    const contractsDeployedMap: { [contractName: string]: { contractAddress: string; bytecode: string; abi: any } } = {};
+    const contractsDeployedMap: IContractDeploymentMap = {};
     const artifactFilesPath = shell
         .ls("-R", [path.resolve(projectRootDir, "smart-contracts", "artifacts", "contracts", `**${path.sep}*.json`)])
         .filter((path) => !path.endsWith(".dbg.json"));
@@ -175,7 +201,8 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
         contractsDeployedMap[artifact.contractName.toUpperCase()] = {
             contractAddress: blockTransactionReceipts[i].contractAddress,
             bytecode: artifact.bytecode,
-            abi: artifact.abi
+            abi: artifact.abi,
+            name: artifact.contractName
         }
     }
 
@@ -184,6 +211,73 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
         contractsDeployedMap,
         blockNumberCurr: blockNumberCurrInt
     };
+}
+
+/**
+ * @description Syncs local blockchain with Ethernal
+ * @param projectRootDir Project root directory
+ * @param contractsDeployedMap Map of contracts to sync
+ * @param ethernalLoginEmail Ethernal login email; not needed if in env
+ * @param ethernalLoginPassword Ethernal login password; not needed if in env
+ * @param ethernalWorkspace Ethernal workspace; not needed if in env
+ */
+export const syncLocalhostWithEthernal = async (projectRootDir: string, contractsDeployedMap: IContractDeploymentMap, ethernalLoginEmail?: string, ethernalLoginPassword?: string, ethernalWorkspace?: string) => {
+    // Ethernal config
+    const ethernalConfig = getEthernalParams({ projectRootDir, enableEthernal: true, ethernalLoginEmail, ethernalLoginPassword, ethernalWorkspace });
+
+    // Start sync processes
+    const processes = Object.values(contractsDeployedMap)
+        .map(async ({ contractAddress, name }) => {
+            const childProcess = await runChildProcess(
+                `npx hardhat ${ethernalConfig.config} ethernal:sync-artifact`,
+                [name, contractAddress],
+                {
+                    cwd: path.resolve(projectRootDir, "smart-contracts"),
+                    mode: "sync",
+                    env: ethernalConfig.env
+                }
+            );
+
+            // Log
+            const outputCombined = `${childProcess.stdoutContent}\n${childProcess.stderrContent}`;
+            if (outputCombined.toLowerCase().includes("error")) {
+                logErrorWithBg(outputCombined);
+                throw Error(childProcess.stderrContent);
+            } else {
+                logSuccessWithBg(`Ethernal synced contract: ${name} -> ${contractAddress}`);
+            }
+        });
+
+    await Promise.all(processes);
+}
+
+/**
+ * @description Resets Ethernal
+ * @param projectRootDir Project root directory
+ * @param ethernalLoginEmail Ethernal login email; not needed if in env
+ * @param ethernalLoginPassword Ethernal login password; not needed if in env
+ */
+export const resetEthernal = async (projectRootDir: string, ethernalLoginEmail?: string, ethernalLoginPassword?: string, ethernalWorkspace?: string) => {
+    // Ethernal config
+    const ethernalConfig = getEthernalParams({ projectRootDir, enableEthernal: true, ethernalLoginEmail, ethernalLoginPassword, ethernalWorkspace });
+
+    const childProcess = await runChildProcess(
+        `npx hardhat ${ethernalConfig.config} ethernal:reset`,
+        [`"${ethernalConfig.env.ETHERNAL_WORKSPACE}"`],
+        {
+            cwd: path.resolve(projectRootDir, "smart-contracts"),
+            mode: "sync",
+            env: ethernalConfig.env
+        }
+    );
+
+    const outputCombined = `${childProcess.stdoutContent}\n${childProcess.stderrContent}`;
+    if (outputCombined.toLowerCase().includes("error")) {
+        logErrorWithBg(outputCombined);
+        throw Error(childProcess.stderrContent);
+    } else {
+        logSuccessWithBg("Ethernal reset");
+    }
 }
 
 /**
@@ -307,4 +401,40 @@ export const getLatestBlockNumberOfNetwork = async (networkName: string) => {
     const blockNumberCurrInt = parseInt(blockNumberCurr);
 
     return blockNumberCurrInt;
+}
+
+/**
+ * @description Returns Ethernal params
+ * @param Options Credentials and other things needed
+ * @returns Config
+ */
+export const getEthernalParams = ({ ethernalLoginEmail, ethernalLoginPassword, enableEthernal, projectRootDir, ethernalWorkspace }: {
+    projectRootDir: string;
+    enableEthernal?: boolean;
+    ethernalLoginEmail?: string;
+    ethernalLoginPassword?: string;
+    ethernalWorkspace?: string;
+}) => {
+    // Prepare credentials
+    const envFromFile = dotenv
+        .config({
+            path: path.resolve(projectRootDir, "smart-contracts", ".env")
+        }).parsed;
+    const [ethernalLoginEmailToUse, ethernalLoginPasswordToUse, ethernalWorkspaceToUse] = [
+        ethernalLoginEmail ?? envFromFile?.ETHERNAL_EMAIL ?? "",
+        ethernalLoginPassword ?? envFromFile?.ETHERNAL_PASSWORD ?? "",
+        ethernalWorkspace ?? envFromFile?.ETHERNAL_WORKSPACE ?? ""
+    ];
+
+    // Return
+    return {
+        config: enableEthernal
+            ? "--config hardhat-ethernal.config.ts"
+            : "--config hardhat.config.ts",
+        env: {
+            ETHERNAL_EMAIL: ethernalLoginEmailToUse,
+            ETHERNAL_PASSWORD: ethernalLoginPasswordToUse,
+            ETHERNAL_WORKSPACE: ethernalWorkspaceToUse
+        }
+    }
 }

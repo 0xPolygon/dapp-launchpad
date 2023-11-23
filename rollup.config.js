@@ -5,6 +5,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
 import { builtinModules } from 'module';
 import terser from '@rollup/plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default defineConfig({
     input: 'index.ts',
@@ -17,12 +18,17 @@ export default defineConfig({
     plugins: [
         nodeResolve(),
         json(),
+        commonjs({
+            include: /node_modules/,
+            requireReturnsDefault: 'auto'
+        }),
         typescript({
             exclude: 'node_modules'
         }),
         terser()
     ],
     watch: {
+        clearScreen: true,
         include: [
             "index.ts",
             "commands/**/*",

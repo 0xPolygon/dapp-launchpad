@@ -174,6 +174,18 @@ create-polygon-dapp dev -h
 
 The `dev` command internally runs the provided `scripts/deploy_localhost.ts` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
 
+#### Local test chain explorer
+
+Optionally, you can also enable a local blockchain explorer, which auto-indexes all transactions, and provides a feature-loaded dashboard for you to get an overview of this chain.
+
+To use it, run the `dev` command with `-e`, optionally with a few more args.
+
+For this to work, you need to sign up on [Ethernal](https://app.tryethernal.com/), and create a workspace. Then you put your login email, password and workspace name inside the `.env` in `smart-contracts`. (checkout the `.env.example`)
+
+The above config can also be mentioned with `dev` command params `--ethernal-login-email`, `--ethernal-login-password` and `--ethernal-workspace`, which overrides the env variables.
+
+Once started, you can access the chain explorer at the same URL as mentioned before!
+
 #### Deploying to production
 
 The `deploy` command automates everything for you to deploy to Ethereum or any Polygon chain.
