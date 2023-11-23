@@ -6,16 +6,7 @@ import { writeSmartContractsDataToFrontend, writeTypechainTypesToFrontend } from
 import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } from "../utils/frontend";
 import shelljs from "shelljs";
 import path from "path";
-
-interface IDevCommandOptions {
-    forkNetworkName?: string;
-    forkBlockNum?: string;
-    resetOnChange?: boolean;
-    enableExplorer?: boolean;
-    ethernalLoginEmail?: string;
-    ethernalLoginPassword?: string;
-    ethernalWorkspace?: string;
-}
+import { IDevCommandOptions } from "../types/commands";
 
 /**
  * @description Command that runs on Dev
