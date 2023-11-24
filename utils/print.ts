@@ -57,6 +57,26 @@ export const logSuccess = (...args: string[]) => {
  */
 export const logSuccessWithBg = (...args: string[]) => {
     console.log(
-        chalk.bgGreen.white(`[${getCurrentHumanReadableTime()}] ✔ `, ...args)
+        chalk.bgGreen.whiteBright(`[${getCurrentHumanReadableTime()}] ✔ `, ...args)
+    );
+}
+
+/**
+ * @description Logs a warning
+ * @argument args What to print
+ */
+export const logWarning = (...args: string[]) => {
+    console.log(
+        chalk.yellowBright(`[${getCurrentHumanReadableTime()}] ? `, ...args)
+    );
+}
+
+/**
+ * @description Logs a warning
+ * @argument args What to print
+ */
+export const logWarningWithBg = (...args: string[]) => {
+    console.log(
+        chalk.bgYellow.black(`[${getCurrentHumanReadableTime()}] ? `, ...args)
     );
 }
