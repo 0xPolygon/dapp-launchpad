@@ -6,15 +6,15 @@ import json from '@rollup/plugin-json';
 import { builtinModules } from 'module';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
+import shebang from 'rollup-plugin-add-shebang';
 
 export default defineConfig({
     input: 'index.ts',
     output: {
         file: path.resolve("bin", "cli.js"),
-        format: 'es',
-        compact: true
+        format: 'es'
     },
-    external: [...builtinModules, "shelljs", "commander", "ethers", "chokidar", "chalk"],
+    external: [...builtinModules, "shelljs", "commander", "ethers", "chokidar", "chalk", "node-fetch"],
     plugins: [
         nodeResolve(),
         json(),
@@ -25,7 +25,11 @@ export default defineConfig({
         typescript({
             exclude: 'node_modules'
         }),
-        terser()
+        terser(),
+        shebang({
+            include: path.resolve("bin", "cli.js"),
+            shebang: "#!/usr/bin/env node"
+        })
     ],
     watch: {
         clearScreen: true,
