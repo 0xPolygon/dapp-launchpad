@@ -106,7 +106,7 @@ The project is divided into two parts - Frontend (inside `./frontend`) and Smart
 ### Frontend
 
 #### Node version
-Node >v16.14.X is supported, although Node v18.17.X is recommended.
+Node >v16.14.x is supported, although Node v18.x.x is recommended.
 
 A `.nvmrc` has been provided if you use `nvm`. You can use this by:
 ```
