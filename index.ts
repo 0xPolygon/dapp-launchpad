@@ -4,12 +4,8 @@ import { Option, program } from "commander";
 import { dev } from "./commands/dev";
 import { init } from "./commands/init";
 import { deploy } from "./commands/deploy";
-import networksMap from "./config/networks.json";
-
-/// Supported network names
-const supportedNetworkNames = Object.entries(networksMap)
-  .filter(([_, networkConfig]) => (networkConfig as any).forking)
-  .map(([networkName, _]) => networkName);
+import { getSupportedNetworkNames } from "./utils/smart-contracts";
+import { generateSmartContractsConfig } from "./commands/generate/smart-contracts-data";
 
 /// Metadata
 program
@@ -30,7 +26,7 @@ program
 program
   .command("dev")
   .description("Starts a local dev environment - a local blockchain (hardhat) and a local FE (Next.js) server")
-  .addOption(new Option("-n, --fork-network-name [NAME]", "Name of the network to fork; optional. By default, it starts a new chain from genesis block.").choices(supportedNetworkNames))
+  .addOption(new Option("-n, --fork-network-name [NAME]", "Name of the network to fork; optional. By default, it starts a new chain from genesis block.").choices(getSupportedNetworkNames()))
   .option("-b, --fork-block-num [number]", "Block number to fork at. By default, it's the latest block.")
   .option("-r, --reset-on-change", "Resets the entire local blockchain when any code is changed; for forked mode, it resets back to forked block number; NOT DEFAULT")
   .option("-e, --enable-explorer", "Sets up a chain explorer for the local test blockchain started; NOT DEFAULT; sign up at \"https://app.tryethernal.com/\"")
@@ -43,10 +39,23 @@ program
 program
   .command("deploy")
   .description("Deploys the smart contracts and frontend app to production")
-  .addOption(new Option("-n, --network-name <NAME>", "Name of the network to deploy smart contracts to.").choices(supportedNetworkNames))
+  .addOption(new Option("-n, --network-name <NAME>", "Name of the network to deploy smart contracts to.").choices(getSupportedNetworkNames()))
   .option("--only-smart-contracts", "Deploys only smart contracts and updates `smart-contracts-production.json`")
   .option("--only-frontend", "Deploys only smart contracts and updates `smart-contracts-production.json`")
   .action(deploy);
+
+// Generate
+const commandGenerate = program
+  .command("generate")
+  .description("Generates what is specified")
+
+// > Generate smart contracts data
+commandGenerate
+  .command("smart-contracts-config")
+  .description("Manually generates smart contracts config for the frontend; it's not needed if `dev` command is used for smart contracts")
+  .addOption(new Option("-e, --environment <ENV>", "Environment where this config would be used").choices(["development", "production"]).default("development"))
+  .addOption(new Option("-n, --network-name <NAME>", "Name of the network to generate config for.").choices(getSupportedNetworkNames()))
+  .action(generateSmartContractsConfig)
 
 // Parse program
 program.parse();

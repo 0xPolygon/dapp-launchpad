@@ -7,3 +7,8 @@ export interface IDevCommandOptions {
     ethernalLoginPassword?: string;
     ethernalWorkspace?: string;
 }
+
+export interface IGenerateSmartContractsConfig {
+    environment: "development" | "production";
+    networkName: string;
+}
