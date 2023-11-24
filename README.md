@@ -21,7 +21,7 @@ Polygon DApp Scaffold is a CLI tool to quickly initialise a fully-integrated Pol
 Every step of the way is automated!
 
 ## Node version
-Node >v16.14.X is supported, although Node v18.17.X is recommended.
+Node >v16.14.x is supported, although Node v18.x.x is recommended.
 
 Before going on with installation, make sure to switch to a supported Node version.
 
