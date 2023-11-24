@@ -1,9 +1,20 @@
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, extendEnvironment } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "hardhat-ethernal";
+import "./tasks/ethernal";
 
 // Configure env variables
 import * as dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
+
+// Add Ethernal
+extendEnvironment((hre) => {
+  hre.ethernalSync = true;
+  hre.ethernalWorkspace = process.env.ETHERNAL_WORKSPACE;
+  hre.ethernalTrace = true;
+  hre.ethernalResetOnStart = process.env.ETHERNAL_WORKSPACE;
+  hre.ethernalUploadAst = true;
+});
 
 const config: HardhatUserConfig = {
   solidity: "0.8.21",
