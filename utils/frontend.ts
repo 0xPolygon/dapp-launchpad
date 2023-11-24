@@ -3,6 +3,7 @@ import { logErrorWithBg, logInfoWithBg, logSuccessWithBg } from "./print";
 import path from "path";
 import { waitFor } from "./time";
 import { runChildProcess } from "./process";
+import fetch from "node-fetch";
 
 /**
  * @description Starts local frontend dev server
@@ -30,10 +31,11 @@ export const waitForLocalFrontendDevServerToStart = async () => {
             logSuccessWithBg("Started local frontend dev server: http://127.0.0.1:3000");
             break;
         } catch (e: any) {
-            if (e.cause.toString().includes("ECONNREFUSED")) { // If RPC has not started yet
+            const err = e?.cause ?? e?.message ?? "";
+            if (err.toString().includes("ECONNREFUSED")) { // If RPC has not started yet
                 await waitFor(2);
             } else {
-                logErrorWithBg("Failed to start local frontend dev server; ", e.cause);
+                logErrorWithBg("Failed to start local frontend dev server; ", err);
                 throw e;
             }
         }

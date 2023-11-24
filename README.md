@@ -20,6 +20,13 @@ Polygon DApp Scaffold is a CLI tool to quickly initialise a fully-integrated Pol
 
 Every step of the way is automated!
 
+## Node version
+Node >v16.14.x is supported, although Node v18.x.x is recommended.
+
+Before going on with installation, make sure to switch to a supported Node version.
+
+To easily manage different npm versions on your system, we recommend using [nvm](https://github.com/nvm-sh/nvm).
+
 ## Installation
 Install the package globally, and the tool will be accessible anywhere.
 ```
@@ -98,6 +105,14 @@ The project is divided into two parts - Frontend (inside `./frontend`) and Smart
 
 ### Frontend
 
+#### Node version
+Node >v16.14.x is supported, although Node v18.x.x is recommended.
+
+A `.nvmrc` has been provided if you use `nvm`. You can use this by:
+```
+nvm use # in ./frontend
+```
+
 #### Framework
 
 The frontend runs on a Next.js server. If you're new to Next.js but know React.js, getting used to Next.js would be trivial. To get started, modify the component file at `./frontend/src/pages/index.tsx`.
@@ -138,6 +153,14 @@ With the `deploy` command, the Frontend deployment is fully automated. Vercel is
 No pre-configuration is necessary to run the `deploy` command. You'll be taken through all relevant steps upon running it.
 
 ### Smart Contracts
+
+#### Node version
+Node >v16.14.X is supported, although Node v18.17.X is recommended.
+
+A `.nvmrc` has been provided if you use `nvm`. You can use this by:
+```
+nvm use # in ./smart-contracts
+```
 
 #### Environment variables
 

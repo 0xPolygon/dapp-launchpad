@@ -7,6 +7,7 @@ import path from "path";
 import dotenv from "dotenv";
 import { IContractDeploymentMap } from "../types/constants";
 import { runChildProcess } from "./process";
+import fetch from "node-fetch";
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -105,10 +106,11 @@ export const waitForLocalBlockchainToStart = async (forkBlockNumber: number) => 
             );
             break;
         } catch (e: any) {
-            if (e.cause.toString().includes("ECONNREFUSED")) { // If RPC has not started yet
+            const err = e?.cause ?? e?.message ?? "";
+            if (err.toString().includes("ECONNREFUSED")) { // If RPC has not started yet
                 await waitFor(2);
             } else {
-                logErrorWithBg("Failed to start local test blockchain; ", e.cause);
+                logErrorWithBg("Failed to start local test blockchain; ", err);
                 throw e;
             }
         }
