@@ -1,4 +1,4 @@
-import { getCWD, isCWDProjectRootDirectory } from "../utils/project";
+import { getCWD, isCWDProjectRootDirectory, isSmartContractsConfigExist } from "../utils/project";
 import { logErrorWithBg, logInfoWithBg } from "../utils/print";
 import chokidar from "chokidar";
 import { startLocalBlockchain, deploySmartContractsLocalChain, getSupportedNetworkNames, getLatestBlockNumberOfNetwork, waitForLocalBlockchainToStart, resetLocalBlockchain, syncLocalhostWithEthernal, resetEthernal, getEthernalParams } from "../utils/smart-contracts";
@@ -11,7 +11,7 @@ import { IDevCommandOptions } from "../types/commands";
 /**
  * @description Command that runs on Dev
  */
-export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enableExplorer: enableEthernal, ethernalLoginEmail, ethernalLoginPassword, ethernalWorkspace }: IDevCommandOptions) => {
+export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enableExplorer: enableEthernal, ethernalLoginEmail, ethernalLoginPassword, ethernalWorkspace, onlyFrontend, onlySmartContracts }: IDevCommandOptions) => {
     // Data
     let projectRootDir: string;
     let localBlockchainProcess: ReturnType<typeof shelljs.exec>;
@@ -22,6 +22,8 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
     let blockNumberLastIndexed = 1;
     let contractsDeployedMap = {};
     let firstTimeDeploying = true;
+    const shouldStartLocalBlockchain = (onlyFrontend && !onlySmartContracts) ? false : true;
+    const shouldStartLocalFrontend = (!onlyFrontend && onlySmartContracts) ? false : true;
 
     // Functions
     const _prepareSmartContracts = async () => {
@@ -69,7 +71,7 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
 
         // Check if forking network is correct
         const supportedNetworks = getSupportedNetworkNames();
-        if (forkNetworkName) {
+        if (forkNetworkName && shouldStartLocalBlockchain) {
             if (!supportedNetworks.includes(forkNetworkName)) {
                 logErrorWithBg(`Network unsupported! Supported networks are: ${supportedNetworks.join(", ")}`);
                 return;
@@ -84,42 +86,54 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
             }
         }
 
-        // Check if Ethernal credentials are present
-        const ethernalConfigs = getEthernalParams({ enableEthernal: true, ethernalLoginEmail, ethernalLoginPassword, projectRootDir, ethernalWorkspace })
-        if (enableEthernal && !(ethernalConfigs.env.ETHERNAL_EMAIL && ethernalConfigs.env.ETHERNAL_PASSWORD && ethernalConfigs.env.ETHERNAL_WORKSPACE)) {
-            logErrorWithBg("Enabling the explorer requires Ethernal credentials, either with options (--ethernal-login-email, --ethernal-login-password, --ethernal-workspace) or in the .env");
+        // If Frontend only mode, check if smart contracts config is present
+        if (onlyFrontend && !onlySmartContracts && !isSmartContractsConfigExist(projectRootDir, "development")) {
+            logErrorWithBg("Smart contracts config does not exist for frontend (dev); to generate this, run `generate smart-contracts-config` command.");
             return;
         }
 
+        // Check if Ethernal credentials are present
+        if (shouldStartLocalBlockchain) {
+            const ethernalConfigs = getEthernalParams({ enableEthernal: true, ethernalLoginEmail, ethernalLoginPassword, projectRootDir, ethernalWorkspace })
+            if (enableEthernal && !(ethernalConfigs.env.ETHERNAL_EMAIL && ethernalConfigs.env.ETHERNAL_PASSWORD && ethernalConfigs.env.ETHERNAL_WORKSPACE)) {
+                logErrorWithBg("Enabling the explorer requires Ethernal credentials, either with options (--ethernal-login-email, --ethernal-login-password, --ethernal-workspace) or in the .env");
+                return;
+            }
+        }
+
         //// 1. Start local blockchain and wait for it to start
-        localBlockchainProcess = await startLocalBlockchain(projectRootDir, {
-            forkNetworkName,
-            forkBlockNumber: blockNumberLastIndexed,
-            enableEthernal: enableEthernal,
-            ethernalLoginEmail,
-            ethernalLoginPassword,
-            ethernalWorkspace
-        });
-        await waitForLocalBlockchainToStart(blockNumberLastIndexed);
+        if (shouldStartLocalBlockchain) {
+            localBlockchainProcess = await startLocalBlockchain(projectRootDir, {
+                forkNetworkName,
+                forkBlockNumber: blockNumberLastIndexed,
+                enableEthernal: enableEthernal,
+                ethernalLoginEmail,
+                ethernalLoginPassword,
+                ethernalWorkspace
+            });
+            await waitForLocalBlockchainToStart(blockNumberLastIndexed);
 
-        //// 2. Deploy smart contracts for the first time
-        await _prepareSmartContracts();
+            //// 2. Deploy smart contracts for the first time
+            await _prepareSmartContracts();
 
-        //// 3. Start watcher for local blockchain directory
-        watcher = chokidar.watch([
-            path.resolve(projectRootDir, "smart-contracts", "contracts"),
-            path.resolve(projectRootDir, "smart-contracts", "scripts", "deploy_localhost.ts"),
-        ], {
-            awaitWriteFinish: {
-                stabilityThreshold: 2000,
-                pollInterval: 500
-            },
-        });
-        watcher.on("change", _prepareSmartContracts);
+            //// 3. Start watcher for local blockchain directory
+            watcher = chokidar.watch([
+                path.resolve(projectRootDir, "smart-contracts", "contracts"),
+                path.resolve(projectRootDir, "smart-contracts", "scripts", "deploy_localhost.ts"),
+            ], {
+                awaitWriteFinish: {
+                    stabilityThreshold: 2000,
+                    pollInterval: 500
+                },
+            });
+            watcher.on("change", _prepareSmartContracts);
+        }
 
         //// 4 Start local frontend dev server and wait for it to start
-        localFrontendDevServerProcess = startLocalFrontendDevServer(projectRootDir);
-        await waitForLocalFrontendDevServerToStart();
+        if (shouldStartLocalFrontend) {
+            localFrontendDevServerProcess = startLocalFrontendDevServer(projectRootDir);
+            await waitForLocalFrontendDevServerToStart();
+        }
 
         //// Keep running forever
         interval = setInterval(() => { }, 1 << 30);
