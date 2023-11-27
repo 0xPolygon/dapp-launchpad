@@ -6,3 +6,5 @@ export interface IContractDeploymentMap {
         name: string;
     }
 }
+
+export type IEnvironment = "development" | "production";

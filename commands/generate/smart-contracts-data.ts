@@ -61,6 +61,7 @@ export const generateSmartContractsConfig = async ({ environment, networkName }:
         //// 2. Write data to frontend
         writeSmartContractsDataToFrontend(projectRootDir, environment, data, networkName);
         logSuccessWithBg(`Configs generated in "${path.resolve(projectRootDir, "frontend", "src", "constants")}".`);
+        logWarningWithBg("This does not generate typescript typings.");
     } catch (e) {
         console.error(e);
     }

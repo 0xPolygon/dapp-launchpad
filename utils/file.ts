@@ -1,6 +1,7 @@
 import shell from "shelljs";
 import path from "path";
 import networksMap from "../config/networks.json";
+import { IEnvironment } from "../types/constants";
 
 /**
  * @description Copies typechain types to frontend
@@ -30,7 +31,7 @@ export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
  * @param smartContractsData Smart contract data to write
  * @param networkName Network name where contracts are deployed
  */
-export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: "development" | "production" = "development", smartContractsData: any, networkName: any) => {
+export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: IEnvironment = "development", smartContractsData: any, networkName: any) => {
     const constantsDir = path.resolve(projectRootDir, "frontend", "src", "constants");
     if (!shell.test("-d", constantsDir)) {
         shell.mkdir("-p", constantsDir);
