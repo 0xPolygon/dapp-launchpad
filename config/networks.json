@@ -34,9 +34,9 @@
     "polygonMumbai": {
         "chainId": 80001,
         "name": "Polygon Mumbai",
-        "url": "https://rpc-mumbai.polygon.technology/",
+        "url": "https://rpc-mumbai.polygon.technology",
         "forking": {
-            "url": "https://rpc-mumbai.polygon.technology/"
+            "url": "https://rpc-mumbai.polygon.technology"
         },
         "blockTime": 2
     },
