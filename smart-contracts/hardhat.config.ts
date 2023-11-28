@@ -13,41 +13,41 @@ const config: HardhatUserConfig = {
     },
     ethereum: {
       chainId: 1,
-      url: "https://rpc.ankr.com/eth",
+      url: "https://eth.public-rpc.com",
       forking: {
-        url: "https://rpc.ankr.com/eth"
+        url: "https://eth.public-rpc.com"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     goerli: {
       chainId: 5,
-      url: "https://rpc.ankr.com/eth_goerli",
+      url: "https://ethereum-goerli.publicnode.com",
       forking: {
-        url: "https://rpc.ankr.com/eth_goerli"
+        url: "https://ethereum-goerli.publicnode.com"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     polygonPos: {
       chainId: 137,
-      url: "https://rpc.ankr.com/polygon",
+      url: "https://polygon-rpc.com",
       forking: {
-        url: "https://rpc.ankr.com/polygon"
+        url: "https://polygon-rpc.com"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     polygonMumbai: {
       chainId: 80001,
-      url: "https://rpc.ankr.com/polygon_mumbai",
+      url: "https://rpc-mumbai.polygon.technology",
       forking: {
-        url: "https://rpc.ankr.com/polygon_mumbai"
+        url: "https://rpc-mumbai.polygon.technology"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     polygonZkevm: {
       chainId: 1101,
-      url: "https://rpc.ankr.com/polygon_zkevm",
+      url: "https://polygon-rpc.com/zkevm",
       forking: {
-        url: "https://rpc.ankr.com/polygon_zkevm"
+        url: "https://polygon-rpc.com/zkevm"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
