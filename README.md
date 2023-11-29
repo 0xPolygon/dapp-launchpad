@@ -43,6 +43,10 @@ create-polygon-dapp init [YOUR PROJECT NAME]
 
 This will create a new directory in your current directory, and initialise a minimal DApp project inside it, then proceed to install all required packages.
 
+By default, the scaffolded project is in javascript. To use typescript or any other template, use `--template NAME` option.
+
+To get a list of available templates (for use in above option), run `list scaffold-templates`.
+
 ### Setting up enviroment variables
 Before starting anything, set up the environment variables in both the `frontend` and `smart-contracts` suub-folders, in a `.env` file. Example env files are provided for each, in `.env.example`.
 

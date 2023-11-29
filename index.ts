@@ -19,7 +19,7 @@ program
 program
   .command("init")
   .description("Initialises a Polygon DApp project in a new directory")
-  .option("-t, --template [NAME]", "Name of the scaffold template to use; default: \"typescript\". To get list of available templates, run `list scaffold-templates`.", "typescript")
+  .option("-t, --template [NAME]", "Name of the scaffold template to use; default: \"javascript\". To get list of available templates, run `list scaffold-templates`.", "javascript")
   .argument("[project-name]", "Name of the project; optional")
   .action(init);
 
@@ -55,7 +55,7 @@ const commandList = program
 // > List scaffold templates
 commandList
   .command("scaffold-templates")
-  .description("Lists all available scaffold templates")
+  .description("Lists all available scaffold templates.")
   .action(listScaffoldTemplates)
 
 // Generate
