@@ -7,6 +7,7 @@ import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } fro
 import shelljs from "shelljs";
 import path from "path";
 import { IDevCommandOptions } from "../types/commands";
+import { getDAppScaffoldConfig } from "../utils/config";
 
 /**
  * @description Command that runs on Dev
@@ -118,8 +119,8 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
 
             //// 3. Start watcher for local blockchain directory
             watcher = chokidar.watch([
-                path.resolve(projectRootDir, "smart-contracts", "contracts"),
-                path.resolve(projectRootDir, "smart-contracts", "scripts", "deploy_localhost.ts"),
+                path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["contracts-dir"]),
+                path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-localhost"]),
             ], {
                 awaitWriteFinish: {
                     stabilityThreshold: 2000,

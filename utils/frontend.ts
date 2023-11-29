@@ -4,6 +4,7 @@ import path from "path";
 import { waitFor } from "./time";
 import { runChildProcess } from "./process";
 import fetch from "node-fetch";
+import { getDAppScaffoldConfig } from "./config";
 
 /**
  * @description Starts local frontend dev server
@@ -16,7 +17,7 @@ export const startLocalFrontendDevServer = (projectRootDir: string) => {
         "npm run dev",
         {
             async: true,
-            cwd: path.resolve(projectRootDir, "frontend")
+            cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"])
         }
     )
 }
@@ -49,7 +50,7 @@ export const waitForLocalFrontendDevServerToStart = async () => {
 export const loginToVercel = async (projectRootDir: string) => {
     try {
         await runChildProcess("npx vercel login", [], {
-            cwd: path.resolve(projectRootDir, "frontend"),
+            cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]),
             mode: "sync-interactive"
         });
         logSuccessWithBg("Logged in to Vercel");
@@ -73,7 +74,7 @@ export const deployFrontendToProduction = async (projectRootDir: string) => {
                 "--force"
             ],
             {
-                cwd: path.resolve(projectRootDir, "frontend"),
+                cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]),
                 mode: "sync-interactive"
             });
     }

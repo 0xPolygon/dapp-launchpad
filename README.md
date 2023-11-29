@@ -115,7 +115,7 @@ nvm use # in ./frontend
 
 #### Framework
 
-The frontend runs on a Next.js server. If you're new to Next.js but know React.js, getting used to Next.js would be trivial. To get started, modify the component file at `./frontend/src/pages/index.tsx`.
+The frontend runs on a Next.js server. If you're new to Next.js but know React.js, getting used to Next.js would be trivial. To get started, modify the component file at `./frontend/src/pages/index`.
 
 To learn more about Next.js, [read their docs](https://nextjs.org/docs).
 
@@ -195,7 +195,7 @@ To see all available options, run:
 create-polygon-dapp dev -h
 ```
 
-The `dev` command internally runs the provided `scripts/deploy_localhost.ts` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
+The `dev` command internally runs the provided `scripts/deploy_localhost` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
 
 #### Local test chain explorer
 
@@ -213,7 +213,7 @@ Once started, you can access the chain explorer at the same URL as mentioned bef
 
 The `deploy` command automates everything for you to deploy to Ethereum or any Polygon chain.
 
-The `deploy` command internally runs the provided `scripts/deploy_prod.ts` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
+The `deploy` command internally runs the provided `scripts/deploy_prod` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
 
 To see all available options, run:
 ```
