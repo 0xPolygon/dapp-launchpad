@@ -1,0 +1,27 @@
+{
+    "template": {
+        "name": "typescript",
+        "filesAndDirs": {
+            "smart-contracts": {
+                "path-dir": "smart-contracts",
+                "contracts-dir": "smart-contracts/contracts",
+                "artifacts-dir": "smart-contracts/artifacts",
+                "deploy-localhost": "smart-contracts/scripts/deploy_localhost.ts",
+                "deploy-prod": "smart-contracts/scripts/deploy_prod.ts",
+                "typechain-types-dir": "smart-contracts/typechain-types",
+                "hardhat-config": "smart-contracts/hardhat.config.ts",
+                "hardhat-config-ethernal": "smart-contracts/hardhat-ethernal.config.ts"
+            },
+            "frontend": {
+                "path-dir": "frontend",
+                "smart-contracts-config-dir": "frontend/src/constants",
+                "deployed-network-development": "frontend/src/constants/deployed-network-development.json",
+                "deployed-network-production": "frontend/src/constants/deployed-network-production.json",
+                "smart-contracts-development": "frontend/src/constants/smart-contracts-development.json",
+                "smart-contracts-production": "frontend/src/constants/deployed-network-production.json",
+                "types-dir": "frontend/src/types",
+                "typechain-types-dir": "frontend/src/types/typechain-types"
+            }
+        }
+    }
+}
