@@ -7,45 +7,45 @@
     "ethereum": {
         "chainId": 1,
         "name": "Ethereum",
-        "url": "https://rpc.ankr.com/eth",
+        "url": "https://eth.public-rpc.com",
         "forking": {
-            "url": "https://rpc.ankr.com/eth"
+            "url": "https://eth.public-rpc.com"
         },
         "blockTime": 20
     },
     "goerli": {
         "chainId": 5,
         "name": "Goerli",
-        "url": "https://rpc.ankr.com/eth_goerli",
+        "url": "https://ethereum-goerli.publicnode.com",
         "forking": {
-            "url": "https://rpc.ankr.com/eth_goerli"
+            "url": "https://ethereum-goerli.publicnode.com"
         },
         "blockTime": 20
     },
     "polygonPos": {
         "chainId": 137,
         "name": "Polygon PoS",
-        "url": "https://rpc.ankr.com/polygon",
+        "url": "https://polygon-rpc.com",
         "forking": {
-            "url": "https://rpc.ankr.com/polygon"
+            "url": "https://polygon-rpc.com"
         },
         "blockTime": 2
     },
     "polygonMumbai": {
         "chainId": 80001,
         "name": "Polygon Mumbai",
-        "url": "https://rpc.ankr.com/polygon_mumbai",
+        "url": "https://rpc-mumbai.polygon.technology",
         "forking": {
-            "url": "https://rpc.ankr.com/polygon_mumbai"
+            "url": "https://rpc-mumbai.polygon.technology"
         },
         "blockTime": 2
     },
     "polygonZkevm": {
         "chainId": 1101,
         "name": "Polygon ZkEVM",
-        "url": "https://rpc.ankr.com/polygon_zkevm",
+        "url": "https://polygon-rpc.com/zkevm",
         "forking": {
-            "url": "https://rpc.ankr.com/polygon_zkevm"
+            "url": "https://polygon-rpc.com/zkevm"
         },
         "blockTime": 2
     },
