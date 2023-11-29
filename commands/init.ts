@@ -37,17 +37,16 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
     shelljs.rm("-rf", [path.resolve(projectRootDir, ".git")]);
 
     // Install deps in Smart contracts
-    const packageManagerCommand = shelljs.which("yarn") ? "yarn" : "npm install";
     logInfoWithBg("Installing smart contract dependencies");
     shelljs.exec(
-        packageManagerCommand,
+        "npm install",
         { cwd: smartContractsDir }
     );
 
     // Install deps in Frontend
     logInfoWithBg("Installing frontend dependencies");
     shelljs.exec(
-        packageManagerCommand,
+        "npm install",
         { cwd: frontendDir }
     );
 
