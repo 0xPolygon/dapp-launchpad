@@ -1,0 +1,85 @@
+@font-face {
+  font-family: "Roobert";
+  font-weight: 300;
+  src: url("/fonts/roobert/Roobert-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roobert";
+  font-weight: 400;
+  src: url("/fonts/roobert/Roobert-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roobert";
+  font-weight: 500;
+  src: url("/fonts/roobert/Roobert-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roobert";
+  font-weight: 600;
+  src: url("/fonts/roobert/Roobert-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roobert";
+  font-weight: 700;
+  src: url("/fonts/roobert/Roobert-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roobert";
+  font-weight: 800;
+  src: url("/fonts/roobert/Roobert-Heavy.ttf") format("truetype");
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: #0C0C0C;
+  font-family: Roobert, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+ul,
+h1,
+h2,
+h3,
+h4,
+button,
+input {
+  margin: 0;
+  padding: 0;
+}
+
+code {
+  user-select: all;
+}
+
+input {
+  background-color: unset;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
