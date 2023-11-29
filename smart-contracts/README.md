@@ -1,2 +1,0 @@
-# Poly Scaffold (Smart contracts)
-
