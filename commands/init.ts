@@ -22,9 +22,6 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
 
     const cwd = getCWD();
     const projectRootDirName = projectName ?? `my-project-${Math.floor(Math.random() * 10000).toString(16)}`;
-    const projectRootDir = path.resolve(cwd, projectRootDirName);
-    const smartContractsDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]);
-    const frontendDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]);
 
     // Clone scaffold directory
     logInfoWithBg("Cloning scaffolded project repo")
@@ -32,6 +29,11 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
         `git clone --branch scaffold-template/${template} https://github.com/0xpolygon/polygon-dapp-scaffold ${projectRootDirName}`,
         { cwd }
     );
+
+    // Get dir paths
+    const projectRootDir = path.resolve(cwd, projectRootDirName);
+    const smartContractsDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]);
+    const frontendDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]);
 
     // Remove repo
     shelljs.rm("-rf", [path.resolve(projectRootDir, ".git")]);
