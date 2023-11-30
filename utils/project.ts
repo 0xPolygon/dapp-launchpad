@@ -1,6 +1,7 @@
 import shell from "shelljs";
 import path from "path";
 import { IEnvironment } from "../types/constants";
+import { getDAppScaffoldConfig } from "./config";
 
 /**
  * @description Gets Polygon DApp Scaffold project's root directory
@@ -15,10 +16,13 @@ export const getCWD = () => {
  * @returns True, if it is
  */
 export const isCWDProjectRootDirectory = () => {
-    const smartContractsDirExists = shell.test("-d", path.resolve(process.cwd(), "smart-contracts"));
-    const frontendDirExists = shell.test("-d", path.resolve(process.cwd(), "frontend"));
+    const cwd = process.cwd();
 
-    return (smartContractsDirExists && frontendDirExists);
+    const smartContractsDirExists = shell.test("-d", path.resolve(cwd, getDAppScaffoldConfig(cwd).template.filesAndDirs["smart-contracts"]["path-dir"]));
+    const frontendDirExists = shell.test("-d", path.resolve(cwd, getDAppScaffoldConfig(cwd).template.filesAndDirs.frontend["path-dir"]));
+    const configExists = shell.test("-f", path.resolve(cwd, "dapp-scaffold.config.json"));
+
+    return (smartContractsDirExists && frontendDirExists && configExists);
 }
 
 /**
@@ -29,7 +33,7 @@ export const isCWDProjectRootDirectory = () => {
  */
 export const isSmartContractsConfigExist = (projectRootDir: string, env: IEnvironment) => {
     return (
-        shell.test("-f", path.resolve(projectRootDir, "frontend", "src", "constants", `smart-contracts-${env}.json`)) &&
-        shell.test("-f", path.resolve(projectRootDir, "frontend", "src", "constants", `deployed-network-${env}.json`))
+        shell.test("-f", path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend[`smart-contracts-${env}`])) &&
+        shell.test("-f", path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend[`deployed-network-${env}`]))
     );
 }

@@ -1,3 +1,7 @@
+export interface IInitCommandOptions {
+    template: string;
+}
+
 export interface IDevCommandOptions {
     forkNetworkName?: string;
     forkBlockNum?: string;

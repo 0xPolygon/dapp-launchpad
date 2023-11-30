@@ -7,6 +7,8 @@ import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } fro
 import shelljs from "shelljs";
 import path from "path";
 import { IDevCommandOptions } from "../types/commands";
+import { getDAppScaffoldConfig } from "../utils/config";
+import { IDappScaffoldConfig } from "../types/constants";
 
 /**
  * @description Command that runs on Dev
@@ -24,6 +26,7 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
     let firstTimeDeploying = true;
     const shouldStartLocalBlockchain = (onlyFrontend && !onlySmartContracts) ? false : true;
     const shouldStartLocalFrontend = (!onlyFrontend && onlySmartContracts) ? false : true;
+    let dAppScaffoldConfig: IDappScaffoldConfig;
 
     // Functions
     const _prepareSmartContracts = async () => {
@@ -54,7 +57,9 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
         }
 
         // Copy new typechain types to frontend app
-        writeTypechainTypesToFrontend(projectRootDir);
+        if (dAppScaffoldConfig.template.name === "typescript") {
+            writeTypechainTypesToFrontend(projectRootDir);
+        }
 
         // Patch in new contract data in frontend app
         writeSmartContractsDataToFrontend(projectRootDir, "development", contractsDeployedMap, "localhost");
@@ -101,12 +106,15 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
             }
         }
 
+        // Get DApp scaffold config
+        dAppScaffoldConfig = getDAppScaffoldConfig(projectRootDir);
+
         //// 1. Start local blockchain and wait for it to start
         if (shouldStartLocalBlockchain) {
             localBlockchainProcess = await startLocalBlockchain(projectRootDir, {
                 forkNetworkName,
                 forkBlockNumber: blockNumberLastIndexed,
-                enableEthernal: enableEthernal,
+                enableEthernal,
                 ethernalLoginEmail,
                 ethernalLoginPassword,
                 ethernalWorkspace
@@ -118,8 +126,8 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
 
             //// 3. Start watcher for local blockchain directory
             watcher = chokidar.watch([
-                path.resolve(projectRootDir, "smart-contracts", "contracts"),
-                path.resolve(projectRootDir, "smart-contracts", "scripts", "deploy_localhost.ts"),
+                path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["contracts-dir"]),
+                path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-localhost"]),
             ], {
                 awaitWriteFinish: {
                     stabilityThreshold: 2000,

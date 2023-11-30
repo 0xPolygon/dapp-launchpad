@@ -5,6 +5,7 @@ import { init } from "./commands/init";
 import { deploy } from "./commands/deploy";
 import { getSupportedNetworkNames } from "./utils/smart-contracts";
 import { generateSmartContractsConfig } from "./commands/generate/smart-contracts-data";
+import { listScaffoldTemplates } from "./commands/list/scaffold-templates";
 
 /// Metadata
 program
@@ -18,6 +19,7 @@ program
 program
   .command("init")
   .description("Initialises a Polygon DApp project in a new directory")
+  .option("-t, --template [NAME]", "Name of the scaffold template to use; default: \"javascript\". To get list of available templates, run `list scaffold-templates`.", "javascript")
   .argument("[project-name]", "Name of the project; optional")
   .action(init);
 
@@ -44,6 +46,17 @@ program
   .option("--only-smart-contracts", "Deploys only smart contracts and updates `smart-contracts-production.json`.")
   .option("--only-frontend", "Deploys only frontend; smart contracts data is read from `smart-contracts-production.json` which must pre-exist.")
   .action(deploy);
+
+// List
+const commandList = program
+  .command("list")
+  .description("Lists what is specified");
+
+// > List scaffold templates
+commandList
+  .command("scaffold-templates")
+  .description("Lists all available scaffold templates.")
+  .action(listScaffoldTemplates)
 
 // Generate
 const commandGenerate = program

@@ -2,25 +2,32 @@ import shell from "shelljs";
 import path from "path";
 import networksMap from "../config/networks.json";
 import { IEnvironment } from "../types/constants";
+import { getDAppScaffoldConfig } from "./config";
 
 /**
  * @description Copies typechain types to frontend
  * @param {string} projectRootDir 
  */
 export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
-    const typechainDir = path.resolve(projectRootDir, "frontend", "src", "types", "typechain-types");
-    if (shell.test("-d", typechainDir)) {
-        shell.rm("-r", typechainDir);
+    const frontendTypesDir = getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["types-dir"];
+    const frontendTypechainDir = getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["typechain-types-dir"];
+    const smartContractsTypechainDir = getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["typechain-types-dir"];
+
+    if (!(frontendTypesDir && frontendTypechainDir && smartContractsTypechainDir)) return;
+
+    const frontendTypechainDirFull = path.resolve(projectRootDir, frontendTypechainDir);
+    if (shell.test("-d", frontendTypechainDirFull)) {
+        shell.rm("-r", frontendTypechainDirFull);
     }
 
-    const typeDir = path.resolve(projectRootDir, "frontend", "src", "types");
-    if (!shell.test("-d", typeDir)) {
-        shell.mkdir("-p", typeDir);
+    const frontendTypesDirFull = path.resolve(projectRootDir, frontendTypesDir);
+    if (!shell.test("-d", frontendTypesDirFull)) {
+        shell.mkdir("-p", frontendTypesDirFull);
     }
 
     shell.cp("-r",
-        path.resolve(projectRootDir, "smart-contracts", "typechain-types"),
-        typeDir
+        path.resolve(projectRootDir, smartContractsTypechainDir),
+        frontendTypesDirFull
     );
 }
 
@@ -32,14 +39,14 @@ export const writeTypechainTypesToFrontend = (projectRootDir: string) => {
  * @param networkName Network name where contracts are deployed
  */
 export const writeSmartContractsDataToFrontend = (projectRootDir: string, env: IEnvironment = "development", smartContractsData: any, networkName: any) => {
-    const constantsDir = path.resolve(projectRootDir, "frontend", "src", "constants");
+    const constantsDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["smart-contracts-config-dir"]);
     if (!shell.test("-d", constantsDir)) {
         shell.mkdir("-p", constantsDir);
     }
 
     new shell.ShellString(JSON.stringify(smartContractsData))
-        .to(path.resolve(projectRootDir, "frontend", "src", "constants", `smart-contracts-${env}.json`));
+        .to(path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend[`smart-contracts-${env}`]));
 
     new shell.ShellString(JSON.stringify((networksMap as any)[networkName]))
-        .to(path.resolve(projectRootDir, "frontend", "src", "constants", `deployed-network-${env}.json`));
+        .to(path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend[`deployed-network-${env}`]));
 }
