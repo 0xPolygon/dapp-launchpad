@@ -1,10 +1,10 @@
 {
-  "name": "@0xpolygon/polygon-dapp-scaffold",
+  "name": "@polygonlabs/dapp-launchpad",
   "version": "0.1.0",
-  "description": "CLI tool to initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.",
+  "description": "CLI tool to initialise a fully-integrated Polygon dApp, create a development environment, and deploy everything to production.",
   "license": "MIT",
   "bin": {
-    "create-polygon-dapp": "./bin/cli.js"
+    "dapp-launchpad": "./bin/cli.js"
   },
   "type": "module",
   "scripts": {
