@@ -18,11 +18,13 @@ export const getCWD = () => {
 export const isCWDProjectRootDirectory = () => {
     const cwd = process.cwd();
 
+    const configExists = shell.test("-f", path.resolve(cwd, "dapp-launchpad.config.json"));
+    if(!configExists) return false;
+
     const smartContractsDirExists = shell.test("-d", path.resolve(cwd, getDAppLaunchpadConfig(cwd).template.filesAndDirs["smart-contracts"]["path-dir"]));
     const frontendDirExists = shell.test("-d", path.resolve(cwd, getDAppLaunchpadConfig(cwd).template.filesAndDirs.frontend["path-dir"]));
-    const configExists = shell.test("-f", path.resolve(cwd, "dapp-launchpad.config.json"));
 
-    return (smartContractsDirExists && frontendDirExists && configExists);
+    return (smartContractsDirExists && frontendDirExists);
 }
 
 /**
