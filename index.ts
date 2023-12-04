@@ -9,8 +9,8 @@ import { listScaffoldTemplates } from "./commands/list/scaffold-templates";
 
 /// Metadata
 program
-  .name('create-polygon-dapp')
-  .description('CLI tool to initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.')
+  .name('dapp-launchpad')
+  .description('CLI tool to initialise a fully-integrated EVM-compatible DApp, create a development environment, and deploy everything to production.')
   .version(packageJson.version);
 
 //// Add commands
@@ -18,7 +18,7 @@ program
 // Init
 program
   .command("init")
-  .description("Initialises a Polygon DApp project in a new directory")
+  .description("Initialises a DApp Launchpad project in a new directory")
   .option("-t, --template [NAME]", "Name of the scaffold template to use; default: \"javascript\". To get list of available templates, run `list scaffold-templates`.", "javascript")
   .argument("[project-name]", "Name of the project; optional")
   .action(init);

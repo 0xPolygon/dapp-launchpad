@@ -12,7 +12,7 @@ export const deploy = async ({ networkName, onlySmartContracts, onlyFrontend }: 
         //// 0. Do checks
         // Check if it's project directory
         if (!isCWDProjectRootDirectory()) {
-            logErrorWithBg("You're not in your Polygon DApp Scaffold project root directory!");
+            logErrorWithBg("You're not in your dApp Launchpad project root directory!");
             return;
         }
         const projectRootDir = getCWD();
@@ -40,7 +40,7 @@ export const deploy = async ({ networkName, onlySmartContracts, onlyFrontend }: 
         }
 
         // All done
-        logSuccessWithBg("Your Polygon project is deployed :)")
+        logSuccessWithBg("Your dApp Launchpad project is deployed :)")
     } catch (e) {
         logErrorWithBg("Could not deploy project");
         console.error(e);

@@ -3,7 +3,7 @@ import { logErrorWithBg, logInfoWithBg, logSuccessWithBg } from "../utils/print"
 import { getCWD } from "../utils/project";
 import path from "path";
 import { IInitCommandOptions } from "../types/commands";
-import { fixDAppScaffoldConfig, getAvailableScaffoldTemplates, getDAppScaffoldConfig } from "../utils/config";
+import { fixDAppScaffoldConfig, getAvailableScaffoldTemplates, getDAppLaunchpadConfig } from "../utils/config";
 
 
 export const init = (projectName: string, { template }: IInitCommandOptions) => {
@@ -26,14 +26,14 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
     // Clone scaffold directory
     logInfoWithBg("Cloning scaffolded project repo")
     shelljs.exec(
-        `git clone --branch scaffold-template/${template} https://github.com/0xpolygon/polygon-dapp-scaffold ${projectRootDirName}`,
+        `git clone --branch scaffold-template/${template} https://github.com/0xPolygon/dapp-launchpad ${projectRootDirName}`,
         { cwd }
     );
 
     // Get dir paths
     const projectRootDir = path.resolve(cwd, projectRootDirName);
-    const smartContractsDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]);
-    const frontendDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]);
+    const smartContractsDir = path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]);
+    const frontendDir = path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]);
 
     // Remove repo
     shelljs.rm("-rf", [path.resolve(projectRootDir, ".git")]);
@@ -61,5 +61,5 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
         { cwd: projectRootDir }
     );
 
-    logSuccessWithBg(`Project scaffolded! For help, go to '${projectRootDirName}' and type 'create-polygon-dapp help'.`);
+    logSuccessWithBg(`Project scaffolded! For help, go to '${projectRootDirName}' and type 'dapp-launchpad help'.`);
 }

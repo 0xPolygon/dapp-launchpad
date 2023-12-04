@@ -7,7 +7,7 @@ import { startLocalFrontendDevServer, waitForLocalFrontendDevServerToStart } fro
 import shelljs from "shelljs";
 import path from "path";
 import { IDevCommandOptions } from "../types/commands";
-import { getDAppScaffoldConfig } from "../utils/config";
+import { getDAppLaunchpadConfig } from "../utils/config";
 import { IDappScaffoldConfig } from "../types/constants";
 
 /**
@@ -69,7 +69,7 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
         //// 0. Do checks
         // Check if it's project directory
         if (!isCWDProjectRootDirectory()) {
-            logErrorWithBg("You're not in your Polygon DApp Scaffold project root directory!");
+            logErrorWithBg("You're not in your dApp Launchpad project root directory!");
             return;
         }
         projectRootDir = getCWD();
@@ -107,7 +107,7 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
         }
 
         // Get DApp scaffold config
-        dAppScaffoldConfig = getDAppScaffoldConfig(projectRootDir);
+        dAppScaffoldConfig = getDAppLaunchpadConfig(projectRootDir);
 
         //// 1. Start local blockchain and wait for it to start
         if (shouldStartLocalBlockchain) {
@@ -126,8 +126,8 @@ export const dev = async ({ forkNetworkName, forkBlockNum, resetOnChange, enable
 
             //// 3. Start watcher for local blockchain directory
             watcher = chokidar.watch([
-                path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["contracts-dir"]),
-                path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-localhost"]),
+                path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["contracts-dir"]),
+                path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-localhost"]),
             ], {
                 awaitWriteFinish: {
                     stabilityThreshold: 2000,

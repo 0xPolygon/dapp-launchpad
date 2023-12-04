@@ -6,7 +6,7 @@ import { logErrorWithBg, logSuccessWithBg, logWarningWithBg } from "../../utils/
 import { getCWD, isCWDProjectRootDirectory } from "../../utils/project";
 import path from "path";
 import { getSupportedNetworkNames } from "../../utils/smart-contracts";
-import { getDAppScaffoldConfig } from "../../utils/config";
+import { getDAppLaunchpadConfig } from "../../utils/config";
 
 /**
  * @description Generates smart contracts data
@@ -16,7 +16,7 @@ export const generateSmartContractsConfig = async ({ environment, networkName }:
         //// 0. Do checks
         // Check if it's project directory
         if (!isCWDProjectRootDirectory()) {
-            logErrorWithBg("You're not in your Polygon DApp Scaffold project root directory!");
+            logErrorWithBg("You're not in your dApp Launchpad project root directory!");
             return;
         }
         const projectRootDir = getCWD();
@@ -61,7 +61,7 @@ export const generateSmartContractsConfig = async ({ environment, networkName }:
 
         //// 2. Write data to frontend
         writeSmartContractsDataToFrontend(projectRootDir, environment, data, networkName);
-        logSuccessWithBg(`Smart configs generated in "${path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["smart-contracts-config-dir"])}".`);
+        logSuccessWithBg(`Smart configs generated in "${path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs.frontend["smart-contracts-config-dir"])}".`);
         logWarningWithBg("This does not generate typescript typings.");
     } catch (e) {
         console.error(e);

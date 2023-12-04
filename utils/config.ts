@@ -8,7 +8,7 @@ import { IDappScaffoldConfig } from "../types/constants";
  * @returns List of templates
  */
 export const getAvailableScaffoldTemplates = () => {
-    //const resp = await fetch("https://api.github.com/repos/0xpolygon/polygon-dapp-scaffold/branches") --> REPLACE IN FUTURE WHEN OPEN-SOURCED
+    //const resp = await fetch("https://api.github.com/repos/0xPolygon/dapp-launchpad/branches") --> REPLACE IN FUTURE WHEN OPEN-SOURCED
 
     return [
         "javascript",
@@ -21,8 +21,8 @@ export const getAvailableScaffoldTemplates = () => {
  * @param projectRootDir Project root directory
  * @returns Config
  */
-export const getDAppScaffoldConfig = (projectRootDir: string) => {
-    const configPath = path.resolve(projectRootDir, "dapp-scaffold.config.json");
+export const getDAppLaunchpadConfig = (projectRootDir: string) => {
+    const configPath = path.resolve(projectRootDir, "dapp-launchpad.config.json");
     const configToReturn: IDappScaffoldConfig = JSON.parse(shell.cat(configPath));
     return configToReturn;
 }
@@ -32,7 +32,7 @@ export const getDAppScaffoldConfig = (projectRootDir: string) => {
  * @param projectRootDir Project root directory
  */
 export const fixDAppScaffoldConfig = (projectRootDir: string) => {
-    const configPath = path.resolve(projectRootDir, "dapp-scaffold.config.json");
+    const configPath = path.resolve(projectRootDir, "dapp-launchpad.config.json");
     const config: IDappScaffoldConfig = JSON.parse(shell.cat(configPath));
 
     // Fix pathnames
