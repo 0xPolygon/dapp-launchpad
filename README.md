@@ -1,4 +1,4 @@
-# Polygon DApp Scaffold
+# dApp Launchpad
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -16,7 +16,7 @@
 - [FAQs](#faqs)
 
 ## Introduction
-Polygon DApp Scaffold is a CLI tool to quickly initialise a fully-integrated Polygon DApp, create a development environment, and deploy everything to production.
+dApp Launchpad is a CLI tool to quickly initialise a fully-integrated Polygon dApp, create a development environment, and deploy everything to production.
 
 Every step of the way is automated!
 
@@ -30,7 +30,7 @@ To easily manage different npm versions on your system, we recommend using [nvm]
 ## Installation
 Install the package globally, and the tool will be accessible anywhere.
 ```
-npm install -g @0xpolygon/polygon-dapp-scaffold
+npm install -g @polygonlabs/dapp-launchpad
 ```
 
 ## Usage
@@ -38,10 +38,10 @@ npm install -g @0xpolygon/polygon-dapp-scaffold
 ### Initialising a project
 To initialise a project, simply run:
 ```
-create-polygon-dapp init [YOUR PROJECT NAME]
+dapp-launchpad  init [YOUR PROJECT NAME]
 ```
 
-This will create a new directory in your current directory, and initialise a minimal DApp project inside it, then proceed to install all required packages.
+This will create a new directory in your current directory, and initialise a minimal dApp project inside it, then proceed to install all required packages.
 
 By default, the scaffolded project is in javascript. To use typescript or any other template, use `--template NAME` option.
 
@@ -56,21 +56,21 @@ To get a WalletConnect Project ID, Head over to [WalletConnect Cloud](https://cl
 ### Starting a dev environment
 To start a development environment, use:
 ```
-create-polygon-dapp dev
+dapp-launchpad dev
 ```
 
 And this will start a fully integrated dev environment - a local dev blockchain and a local Frontend dev server! Any change in the code automatically updates both the frontend and the smart contracts; no manual reload is necessary!
 
-This will also generate some funded test wallets for you in this test chain, which you can use to develop your DApp.
+This will also generate some funded test wallets for you in this test chain, which you can use to develop your dApp.
 
 You may also start this local chain by forking Ethereum or any Polygon chains. Just run:
 ```
-create-polygon-dapp dev -n polygonZkevm
+dapp-launchpad dev -n polygonZkevm
 ```
 
 To see all available options, run:
 ```
-create-polygon-dapp dev -h
+dapp-launchpad dev -h
 ```
 
 See [Project structure](#project-structure) to learn about how the dev environment is structured.
@@ -78,7 +78,7 @@ See [Project structure](#project-structure) to learn about how the dev environme
 ### Deploying
 To deploy your project to production, run:
 ```
-create-polygon-dapp deploy -n CHAIN_NAME
+dapp-launchpad deploy -n CHAIN_NAME
 ```
 
 This will do 2 things:
@@ -87,12 +87,12 @@ This will do 2 things:
 
 To deploy only the smart contracts, run:
 ```
-create-polygon-dapp deploy -n CHAIN_NAME --only-smart-contracts
+dapp-launchpad deploy -n CHAIN_NAME --only-smart-contracts
 ```
 
 And to deploy only the frontend, run:
 ```
-create-polygon-dapp deploy -n CHAIN_NAME --only-frontend
+dapp-launchpad deploy -n CHAIN_NAME --only-frontend
 ```
 
 The frontend deployment requires that smart contracts to have been deployed before. So if you are only deploying the frontend, make sure that you did run the smart contracts deploy command successfully before this.
@@ -100,7 +100,7 @@ The frontend deployment requires that smart contracts to have been deployed befo
 ### Help
 To see all available options of any command at any time, use:
 ```
-create-polygon-dapp [COMMAND NAME] -h
+dapp-launchpad [COMMAND NAME] -h
 ```
 
 ## Project structure
@@ -187,16 +187,16 @@ Scripts are also written in JS/TS, and are in `scripts` directory. Some mandator
 
 The `dev` command automates everything for you to setup a local test chain.
 
-This will also generate some funded test wallets for you in this test chain, which you can use to develop your DApp.
+This will also generate some funded test wallets for you in this test chain, which you can use to develop your dApp.
 
 You may also start this local chain by forking Ethereum or any Polygon chain. Just run:
 ```
-create-polygon-dapp dev -n polygonZkevm -b [BLOCK_NUMBER_TO_FORK_AT]
+dapp-launchpad dev -n polygonZkevm -b [BLOCK_NUMBER_TO_FORK_AT]
 ```
 
 To see all available options, run:
 ```
-create-polygon-dapp dev -h
+dapp-launchpad dev -h
 ```
 
 The `dev` command internally runs the provided `scripts/deploy_localhost` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
@@ -221,7 +221,7 @@ The `deploy` command internally runs the provided `scripts/deploy_prod` script t
 
 To see all available options, run:
 ```
-create-polygon-dapp deploy -h
+dapp-launchpad deploy -h
 ```
 
 ## Contributing
@@ -240,7 +240,7 @@ This will generate `cli.js` inside `bin` directory, which can they be installed 
 npm run install-global
 ```
 
-After this, `create-polygon-dapp` will be available as a global command.
+After this, `dapp-launchpad` will be available as a global command.
 
 ### Dev environment
 
@@ -250,7 +250,7 @@ To modify this tool, a dev environment can be started by running:
 npm run dev
 ```
 
-This watches the source files, and bundles up the CLI app on every change, and installs it globally. In other words, the global `create-polygon-dapp` is always updated with your changes in the code.
+This watches the source files, and bundles up the CLI app on every change, and installs it globally. In other words, the global `dapp-launchpad` is always updated with your changes in the code.
 
 ### Reporting bugs / Feature requests
 
