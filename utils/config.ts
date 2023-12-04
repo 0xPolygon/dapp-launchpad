@@ -21,8 +21,8 @@ export const getAvailableScaffoldTemplates = () => {
  * @param projectRootDir Project root directory
  * @returns Config
  */
-export const getDAppScaffoldConfig = (projectRootDir: string) => {
-    const configPath = path.resolve(projectRootDir, "dapp-scaffold.config.json");
+export const getDAppLaunchpadConfig = (projectRootDir: string) => {
+    const configPath = path.resolve(projectRootDir, "dapp-launchpad.config.json");
     const configToReturn: IDappScaffoldConfig = JSON.parse(shell.cat(configPath));
     return configToReturn;
 }
@@ -32,7 +32,7 @@ export const getDAppScaffoldConfig = (projectRootDir: string) => {
  * @param projectRootDir Project root directory
  */
 export const fixDAppScaffoldConfig = (projectRootDir: string) => {
-    const configPath = path.resolve(projectRootDir, "dapp-scaffold.config.json");
+    const configPath = path.resolve(projectRootDir, "dapp-launchpad.config.json");
     const config: IDappScaffoldConfig = JSON.parse(shell.cat(configPath));
 
     // Fix pathnames

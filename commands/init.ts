@@ -3,7 +3,7 @@ import { logErrorWithBg, logInfoWithBg, logSuccessWithBg } from "../utils/print"
 import { getCWD } from "../utils/project";
 import path from "path";
 import { IInitCommandOptions } from "../types/commands";
-import { fixDAppScaffoldConfig, getAvailableScaffoldTemplates, getDAppScaffoldConfig } from "../utils/config";
+import { fixDAppScaffoldConfig, getAvailableScaffoldTemplates, getDAppLaunchpadConfig } from "../utils/config";
 
 
 export const init = (projectName: string, { template }: IInitCommandOptions) => {
@@ -32,8 +32,8 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
 
     // Get dir paths
     const projectRootDir = path.resolve(cwd, projectRootDirName);
-    const smartContractsDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]);
-    const frontendDir = path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]);
+    const smartContractsDir = path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]);
+    const frontendDir = path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs.frontend["path-dir"]);
 
     // Remove repo
     shelljs.rm("-rf", [path.resolve(projectRootDir, ".git")]);

@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 import { IContractDeploymentMap } from "../types/constants";
 import { runChildProcess } from "./process";
 import fetch from "node-fetch";
-import { getDAppScaffoldConfig } from "./config";
+import { getDAppLaunchpadConfig } from "./config";
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -46,7 +46,7 @@ export const startLocalBlockchain = async (
     // Start process
     const localBlockchainProcess = shell.exec(`npx hardhat ${ethernalParams.config} node ${forkNetworkParam} ${forkBlockNumberParam}`, {
         async: true,
-        cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
+        cwd: path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
         env: {
             ...process.env,
             // For Ethernal
@@ -135,8 +135,8 @@ export const deploySmartContractsLocalChain = async (projectRootDir: string, sta
     const ethernalParams = getEthernalParams({ ethernalLoginEmail, ethernalLoginPassword, enableEthernal, projectRootDir, ethernalWorkspace });
 
     // Deploy
-    shell.exec(`npx hardhat ${ethernalParams.config} run --network localhost ${path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-localhost"])}`, {
-        cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
+    shell.exec(`npx hardhat ${ethernalParams.config} run --network localhost ${path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-localhost"])}`, {
+        cwd: path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
         silent: true,
         env: {
             ...process.env,
@@ -192,7 +192,7 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
     // For all found transactions, get their Contract address, bytecode and name
     const contractsDeployedMap: IContractDeploymentMap = {};
     const artifactFilesPath = shell
-        .ls("-R", [path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["artifacts-dir"], "contracts", `**${path.sep}*.json`)])
+        .ls("-R", [path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["artifacts-dir"], "contracts", `**${path.sep}*.json`)])
         .filter((path) => !path.endsWith(".dbg.json"));
     const artifacts = artifactFilesPath.map((path) => JSON.parse(shell.cat(path)));
 
@@ -235,7 +235,7 @@ export const syncLocalhostWithEthernal = async (projectRootDir: string, contract
                 `npx hardhat ${ethernalConfig.config} ethernal:sync-artifact`,
                 [name, contractAddress],
                 {
-                    cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
+                    cwd: path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
                     mode: "sync",
                     env: ethernalConfig.env
                 }
@@ -268,7 +268,7 @@ export const resetEthernal = async (projectRootDir: string, ethernalLoginEmail?:
         `npx hardhat ${ethernalConfig.config} ethernal:reset`,
         [`"${ethernalConfig.env.ETHERNAL_WORKSPACE}"`],
         {
-            cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
+            cwd: path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
             mode: "sync",
             env: ethernalConfig.env
         }
@@ -294,8 +294,8 @@ export const deploySmartContractsProduction = async (projectRootDir: string, net
     logInfoWithBg(`Deploying smart contracts on ${(networksMap as any)[networkName].name}`);
 
     const blockNumPreDeployment = await getLatestBlockNumberOfNetwork(networkName);
-    const res = shell.exec(`npx hardhat run --network ${networkName} ${path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-prod"])}`, {
-        cwd: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
+    const res = shell.exec(`npx hardhat run --network ${networkName} ${path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["deploy-prod"])}`, {
+        cwd: path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"]),
         silent: true
     });
     if (res.stderr) {
@@ -350,7 +350,7 @@ export const getDeployedSmartContractsProduction = async (projectRootDir: string
     // For all found transactions, get their Contract address, bytecode and name
     const contractsDeployedMap: { [contractName: string]: { contractAddress: string; bytecode: string; abi: any } } = {};
     const artifactFilesPath = shell
-        .ls("-R", [path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["artifacts-dir"], "contracts", `**${path.sep}*.json`)])
+        .ls("-R", [path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["artifacts-dir"], "contracts", `**${path.sep}*.json`)])
         .filter((path) => !path.endsWith(".dbg.json"));
     const artifacts = artifactFilesPath.map((path) => JSON.parse(shell.cat(path)));
 
@@ -421,7 +421,7 @@ export const getEthernalParams = ({ ethernalLoginEmail, ethernalLoginPassword, e
     // Prepare credentials
     const envFromFile = dotenv
         .config({
-            path: path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"], ".env")
+            path: path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["path-dir"], ".env")
         }).parsed;
     const [ethernalLoginEmailToUse, ethernalLoginPasswordToUse, ethernalWorkspaceToUse] = [
         ethernalLoginEmail ?? envFromFile?.ETHERNAL_EMAIL ?? "",
@@ -432,8 +432,8 @@ export const getEthernalParams = ({ ethernalLoginEmail, ethernalLoginPassword, e
     // Return
     return {
         config: enableEthernal
-            ? `--config ${path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["hardhat-config-ethernal"])}`
-            : `--config ${path.resolve(projectRootDir, getDAppScaffoldConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["hardhat-config"])}`,
+            ? `--config ${path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["hardhat-config-ethernal"])}`
+            : `--config ${path.resolve(projectRootDir, getDAppLaunchpadConfig(projectRootDir).template.filesAndDirs["smart-contracts"]["hardhat-config"])}`,
         env: {
             ETHERNAL_EMAIL: ethernalLoginEmailToUse,
             ETHERNAL_PASSWORD: ethernalLoginPasswordToUse,
