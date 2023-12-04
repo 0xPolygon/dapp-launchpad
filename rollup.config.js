@@ -14,7 +14,7 @@ export default defineConfig({
         file: path.resolve("bin", "cli.js"),
         format: 'es'
     },
-    external: [...builtinModules, "shelljs", "commander", "ethers", "chokidar", "chalk", "node-fetch"],
+    external: [...builtinModules, "shelljs", "commander", "ethers", "chokidar", "chalk", "node-fetch", "dotenv", "patch-package", "postinstall-postinstall"],
     plugins: [
         nodeResolve(),
         json(),

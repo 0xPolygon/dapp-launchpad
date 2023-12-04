@@ -34,7 +34,11 @@
     "commander": "^11.1.0",
     "ethers": "6.8.1",
     "node-fetch": "^3.3.2",
-    "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5",
+    "chokidar": "^3.5.3",
+    "dotenv": "^16.3.1",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
@@ -43,10 +47,6 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.5",
     "@types/shelljs": "^0.8.14",
-    "chokidar": "^3.5.3",
-    "dotenv": "^16.3.1",
-    "patch-package": "^8.0.0",
-    "postinstall-postinstall": "^2.1.0",
     "rollup": "^3.29.4",
     "rollup-plugin-add-shebang": "^0.3.1",
     "typescript": "^5.2.2"
