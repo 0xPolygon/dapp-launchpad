@@ -8,7 +8,7 @@ import { IDappScaffoldConfig } from "../types/constants";
  * @returns List of templates
  */
 export const getAvailableScaffoldTemplates = () => {
-    //const resp = await fetch("https://api.github.com/repos/0xpolygon/polygon-dapp-scaffold/branches") --> REPLACE IN FUTURE WHEN OPEN-SOURCED
+    //const resp = await fetch("https://api.github.com/repos/0xPolygon/dapp-launchpad/branches") --> REPLACE IN FUTURE WHEN OPEN-SOURCED
 
     return [
         "javascript",

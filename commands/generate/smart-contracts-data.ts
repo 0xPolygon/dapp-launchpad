@@ -16,7 +16,7 @@ export const generateSmartContractsConfig = async ({ environment, networkName }:
         //// 0. Do checks
         // Check if it's project directory
         if (!isCWDProjectRootDirectory()) {
-            logErrorWithBg("You're not in your Polygon DApp Scaffold project root directory!");
+            logErrorWithBg("You're not in your dApp Launchpad project root directory!");
             return;
         }
         const projectRootDir = getCWD();

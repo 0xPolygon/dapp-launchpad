@@ -1,7 +1,7 @@
 {
   "name": "@polygonlabs/dapp-launchpad",
   "version": "0.1.0",
-  "description": "CLI tool to initialise a fully-integrated Polygon dApp, create a development environment, and deploy everything to production.",
+  "description": "CLI tool to initialise a fully-integrated EVM-compatible dApp, create a development environment, and deploy everything to production.",
   "license": "MIT",
   "bin": {
     "dapp-launchpad": "./bin/cli.js"
@@ -15,16 +15,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0xpolygon/polygon-dapp-scaffold.git"
+    "url": "git+https://github.com/0xpolygon/dapp-launchpad.git"
   },
   "keywords": [
+    "dapp launchpad",
+    "eth scaffold",
+    "dapp scaffold",
     "dapp toolkit",
     "web3 project template",
     "web3 project starter",
     "polygon"
   ],
   "bugs": {
-    "url": "https://github.com/0xPolygon/polygon-dapp-scaffold/issues"
+    "url": "https://github.com/0xPolygon/dapp-launchpad/issues"
   },
   "dependencies": {
     "chalk": "^5.3.0",

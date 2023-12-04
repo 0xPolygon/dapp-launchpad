@@ -16,7 +16,7 @@
 - [FAQs](#faqs)
 
 ## Introduction
-dApp Launchpad is a CLI tool to quickly initialise a fully-integrated Polygon dApp, create a development environment, and deploy everything to production.
+dApp Launchpad is a CLI tool to quickly initialise a fully-integrated EVM-compatible DApp, create a development environment, and deploy everything to production.
 
 Every step of the way is automated!
 
@@ -38,7 +38,7 @@ npm install -g @polygonlabs/dapp-launchpad
 ### Initialising a project
 To initialise a project, simply run:
 ```
-dapp-launchpad  init [YOUR PROJECT NAME]
+dapp-launchpad init [YOUR PROJECT NAME]
 ```
 
 This will create a new directory in your current directory, and initialise a minimal dApp project inside it, then proceed to install all required packages.
@@ -63,7 +63,7 @@ And this will start a fully integrated dev environment - a local dev blockchain 
 
 This will also generate some funded test wallets for you in this test chain, which you can use to develop your dApp.
 
-You may also start this local chain by forking Ethereum or any Polygon chains. Just run:
+You may also start this local chain by forking Ethereum or any EVM-compatible chains. Just run:
 ```
 dapp-launchpad dev -n polygonZkevm
 ```
@@ -189,7 +189,7 @@ The `dev` command automates everything for you to setup a local test chain.
 
 This will also generate some funded test wallets for you in this test chain, which you can use to develop your dApp.
 
-You may also start this local chain by forking Ethereum or any Polygon chain. Just run:
+You may also start this local chain by forking Ethereum or any EVM-compatible chain. Just run:
 ```
 dapp-launchpad dev -n polygonZkevm -b [BLOCK_NUMBER_TO_FORK_AT]
 ```
@@ -215,7 +215,7 @@ Once started, you can access the chain explorer at the same URL as mentioned bef
 
 #### Deploying to production
 
-The `deploy` command automates everything for you to deploy to Ethereum or any Polygon chain.
+The `deploy` command automates everything for you to deploy to Ethereum or any EVM-compatible chain.
 
 The `deploy` command internally runs the provided `scripts/deploy_prod` script to deploy all contracts in the correct sequence. When working on your own smart contracts, make sure to update this script.
 
@@ -254,7 +254,7 @@ This watches the source files, and bundles up the CLI app on every change, and i
 
 ### Reporting bugs / Feature requests
 
-To report a bug or request a feature, [create an issue](https://github.com/0xPolygon/polygon-dapp-scaffold/issues), and describe what you want.
+To report a bug or request a feature, [create an issue](https://github.com/0xPolygon/dapp-launchpad/issues), and describe what you want.
 
 ## FAQs
 

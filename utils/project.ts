@@ -4,7 +4,7 @@ import { IEnvironment } from "../types/constants";
 import { getDAppScaffoldConfig } from "./config";
 
 /**
- * @description Gets Polygon DApp Scaffold project's root directory
+ * @description Gets dApp Launchpad project's root directory
  * @return Project root
  */
 export const getCWD = () => {

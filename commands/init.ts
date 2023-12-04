@@ -26,7 +26,7 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
     // Clone scaffold directory
     logInfoWithBg("Cloning scaffolded project repo")
     shelljs.exec(
-        `git clone --branch scaffold-template/${template} https://github.com/0xpolygon/polygon-dapp-scaffold ${projectRootDirName}`,
+        `git clone --branch scaffold-template/${template} https://github.com/0xPolygon/dapp-launchpad ${projectRootDirName}`,
         { cwd }
     );
 
@@ -61,5 +61,5 @@ export const init = (projectName: string, { template }: IInitCommandOptions) => 
         { cwd: projectRootDir }
     );
 
-    logSuccessWithBg(`Project scaffolded! For help, go to '${projectRootDirName}' and type 'create-polygon-dapp help'.`);
+    logSuccessWithBg(`Project scaffolded! For help, go to '${projectRootDirName}' and type 'dapp-launchpad help'.`);
 }
