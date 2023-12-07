@@ -5,8 +5,8 @@ import { supportedChains } from './chains'
 
 // Config for WC v3
 const metadata = {
-    name: 'Poly Scaffold project',
-    description: 'A simple POC project initialised by Poly Scaffold',
+    name: 'dApp Launchpad project',
+    description: 'A simple POC project initialised by dApp Launchpad',
     url: 'https://127.0.0.1',
     icons: ['https://avatars.githubusercontent.com/u/37784886']
 }
