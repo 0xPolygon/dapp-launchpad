@@ -18,7 +18,7 @@
                 "deployed-network-development": "frontend/src/constants/deployed-network-development.json",
                 "deployed-network-production": "frontend/src/constants/deployed-network-production.json",
                 "smart-contracts-development": "frontend/src/constants/smart-contracts-development.json",
-                "smart-contracts-production": "frontend/src/constants/deployed-network-production.json",
+                "smart-contracts-production": "frontend/src/constants/smart-contracts-production.json",
                 "types-dir": "frontend/src/types",
                 "typechain-types-dir": ""
             }
