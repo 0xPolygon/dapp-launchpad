@@ -29,7 +29,7 @@ export default function InfoSection() {
                         </h3>
 
                         <p className={styles.text}>
-                            A local test frontend server is running, accessible at <u>http://localhost:3000</u> (you're seeing this right now).
+                            A local test frontend server is running, accessible at <u>http://localhost:3000</u> (you&apos;re seeing this right now).
                         </p>
                     </li>
 
