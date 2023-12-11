@@ -1,6 +1,6 @@
 {
   "name": "@polygonlabs/dapp-launchpad",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI tool to initialise a fully-integrated EVM-compatible dApp, create a development environment, and deploy everything to production.",
   "license": "MIT",
   "bin": {

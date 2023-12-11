@@ -43,7 +43,7 @@ export const fixDAppScaffoldConfig = (projectRootDir: string) => {
                 Object
                     .entries((config.template.filesAndDirs as any)[masterDirType])
                     .forEach(([subDirType, pathRelative]) => {
-                        (config.template.filesAndDirs as any)[masterDirType][subDirType] = path.resolve(...(pathRelative as string).split("/"));
+                        (config.template.filesAndDirs as any)[masterDirType][subDirType] = path.join(...(pathRelative as string).split("/"));
                     });
             });
 
