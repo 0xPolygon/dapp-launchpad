@@ -48,7 +48,7 @@ By default, the scaffolded project is in javascript. To use typescript or any ot
 To get a list of available templates (for use in above option), run `list scaffold-templates`.
 
 ### Setting up enviroment variables
-Before starting anything, set up the environment variables in both the `frontend` and `smart-contracts` suub-folders, in a `.env` file. Example env files are provided for each, in `.env.example`.
+Before starting anything, set up the environment variables in both the `frontend` and `smart-contracts` sub-folders, in a `.env` file. Example env files are provided for each, in `.env.example`.
 
 #### WalletConnect Project ID
 To get a WalletConnect Project ID, Head over to [WalletConnect Cloud](https://cloud.walletconnect.com/) and create a new project. This will generate a project ID which you can then use.
