@@ -51,7 +51,7 @@
     },
     "polygonZkevmTestnet": {
         "chainId": 2442,
-        "name": "Polygon zkEVM Cardona Testnet",
+        "name": "Polygon ZkEVM Testnet",
         "url": "https://rpc.cardona.zkevm-rpc.com",
         "forking": {
             "url": "https://rpc.cardona.zkevm-rpc.com"
