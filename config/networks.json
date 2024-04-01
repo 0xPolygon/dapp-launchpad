@@ -50,11 +50,11 @@
         "blockTime": 2
     },
     "polygonZkevmTestnet": {
-        "chainId": 1442,
+        "chainId": 2442,
         "name": "Polygon ZkEVM Testnet",
-        "url": "https://rpc.public.zkevm-test.net",
+        "url": "https://rpc.cardona.zkevm-rpc.com",
         "forking": {
-            "url": "https://rpc.public.zkevm-test.net"
+            "url": "https://rpc.cardona.zkevm-rpc.com"
         },
         "blockTime": 2
     }
