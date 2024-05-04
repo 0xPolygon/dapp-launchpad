@@ -1,61 +1,61 @@
 {
-    "localhost": {
-        "chainId": 31337,
-        "name": "Hardhat",
-        "url": "http://127.0.0.1:8545"
+  "localhost": {
+    "chainId": 31337,
+    "name": "Hardhat",
+    "url": "http://127.0.0.1:8545"
+  },
+  "ethereum": {
+    "chainId": 1,
+    "name": "Ethereum",
+    "url": "https://eth.public-rpc.com",
+    "forking": {
+      "url": "https://eth.public-rpc.com"
     },
-    "ethereum": {
-        "chainId": 1,
-        "name": "Ethereum",
-        "url": "https://eth.public-rpc.com",
-        "forking": {
-            "url": "https://eth.public-rpc.com"
-        },
-        "blockTime": 20
+    "blockTime": 20
+  },
+  "sepolia": {
+    "chainId": 11155111,
+    "name": "Sepolia",
+    "url": "https://sepolia.infura.io/v3/",
+    "forking": {
+      "url": "https://sepolia.infura.io/v3/"
     },
-    "goerli": {
-        "chainId": 5,
-        "name": "Goerli",
-        "url": "https://ethereum-goerli.publicnode.com",
-        "forking": {
-            "url": "https://ethereum-goerli.publicnode.com"
-        },
-        "blockTime": 20
+    "blockTime": 20
+  },
+  "polygonPos": {
+    "chainId": 137,
+    "name": "Polygon PoS",
+    "url": "https://polygon-rpc.com",
+    "forking": {
+      "url": "https://polygon-rpc.com"
     },
-    "polygonPos": {
-        "chainId": 137,
-        "name": "Polygon PoS",
-        "url": "https://polygon-rpc.com",
-        "forking": {
-            "url": "https://polygon-rpc.com"
-        },
-        "blockTime": 2
+    "blockTime": 2
+  },
+  "polygonAmoy": {
+    "chainId": 80002,
+    "name": "Polygon Amoy",
+    "url": "https://rpc-amoy.polygon.technology/",
+    "forking": {
+      "url": "https://rpc-amoy.polygon.technology/"
     },
-    "polygonMumbai": {
-        "chainId": 80001,
-        "name": "Polygon Mumbai",
-        "url": "https://rpc-mumbai.polygon.technology",
-        "forking": {
-            "url": "https://rpc-mumbai.polygon.technology"
-        },
-        "blockTime": 2
+    "blockTime": 2
+  },
+  "polygonZkevm": {
+    "chainId": 1101,
+    "name": "Polygon ZkEVM",
+    "url": "https://polygon-rpc.com/zkevm",
+    "forking": {
+      "url": "https://polygon-rpc.com/zkevm"
     },
-    "polygonZkevm": {
-        "chainId": 1101,
-        "name": "Polygon ZkEVM",
-        "url": "https://polygon-rpc.com/zkevm",
-        "forking": {
-            "url": "https://polygon-rpc.com/zkevm"
-        },
-        "blockTime": 2
+    "blockTime": 2
+  },
+  "polygonZkevmTestnet": {
+    "chainId": 2442,
+    "name": "Polygon ZkEVM Testnet",
+    "url": "https://rpc.cardona.zkevm-rpc.com",
+    "forking": {
+      "url": "https://rpc.cardona.zkevm-rpc.com"
     },
-    "polygonZkevmTestnet": {
-        "chainId": 2442,
-        "name": "Polygon ZkEVM Testnet",
-        "url": "https://rpc.cardona.zkevm-rpc.com",
-        "forking": {
-            "url": "https://rpc.cardona.zkevm-rpc.com"
-        },
-        "blockTime": 2
-    }
+    "blockTime": 2
+  }
 }
