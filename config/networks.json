@@ -57,5 +57,14 @@
             "url": "https://rpc.cardona.zkevm-rpc.com"
         },
         "blockTime": 2
+    },
+    "polygonAmoyTestnet": {
+        "chainId": 80002,
+        "name": "Polygon Amoy Testnet",
+        "url": "https://rpc-amoy.polygon.technology",
+        "forking": {
+            "url": "https://rpc-amoy.polygon.technology"
+        },
+        "blockTime": 2
     }
 }
