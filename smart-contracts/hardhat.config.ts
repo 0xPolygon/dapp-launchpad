@@ -13,49 +13,49 @@ const config: HardhatUserConfig = {
     },
     ethereum: {
       chainId: 1,
-      url: "https://eth.public-rpc.com",
+      url: "https://rpc.ankr.com/eth",
       forking: {
-        url: "https://eth.public-rpc.com"
+        url: "https://rpc.ankr.com/eth"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
-    goerli: {
-      chainId: 5,
-      url: "https://ethereum-goerli.publicnode.com",
+    sepolia: {
+      chainId: 11155111,
+      url: "https://rpc.ankr.com/eth_sepolia",
       forking: {
-        url: "https://ethereum-goerli.publicnode.com"
+        url: "https://rpc.ankr.com/eth_sepolia"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     polygonPos: {
       chainId: 137,
-      url: "https://polygon-rpc.com",
+      url: "https://rpc.ankr.com/polygon",
       forking: {
-        url: "https://polygon-rpc.com"
+        url: "https://rpc.ankr.com/polygon"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
-    polygonMumbai: {
-      chainId: 80001,
-      url: "https://rpc-mumbai.polygon.technology",
+    polygonAmoy: {
+      chainId: 80002,
+      url: "https://rpc-amoy.polygon.technology",
       forking: {
-        url: "https://rpc-mumbai.polygon.technology"
+        url: "https://rpc-amoy.polygon.technology"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     polygonZkevm: {
       chainId: 1101,
-      url: "https://polygon-rpc.com/zkevm",
+      url: "https://rpc.ankr.com/polygon_zkevm",
       forking: {
-        url: "https://polygon-rpc.com/zkevm"
+        url: "https://rpc.ankr.com/polygon_zkevm"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     },
     polygonZkevmTestnet: {
-      chainId: 1442,
-      url: "https://rpc.public.zkevm-test.net",
+      chainId: 2442,
+      url: "https://rpc.cardona.zkevm-rpc.com",
       forking: {
-        url: "https://rpc.public.zkevm-test.net"
+        url: "https://rpc.cardona.zkevm-rpc.com"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER as string]
     }
