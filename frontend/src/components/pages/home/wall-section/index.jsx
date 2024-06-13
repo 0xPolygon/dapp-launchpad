@@ -73,7 +73,7 @@ export default function WallSection() {
 
     // Switch chain on load
     useEffect(() => {
-        if (chainCurrent?.id !== deployedNetworkData?.chainId) {
+        if (deployedNetworkData?.chainId && chainCurrent?.id !== deployedNetworkData?.chainId) {
             switchNetwork && switchNetwork(deployedNetworkData?.chainId);
         }
     }, [chainCurrent, deployedNetworkData])
