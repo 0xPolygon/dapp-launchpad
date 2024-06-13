@@ -13,12 +13,12 @@
         },
         "blockTime": 20
     },
-    "goerli": {
-        "chainId": 5,
-        "name": "Goerli",
-        "url": "https://ethereum-goerli.publicnode.com",
+    "sepolia": {
+        "chainId": 11155111,
+        "name": "Sepolia",
+        "url": "https://rpc.ankr.com/eth_sepolia",
         "forking": {
-            "url": "https://ethereum-goerli.publicnode.com"
+            "url": "https://rpc.ankr.com/eth_sepolia"
         },
         "blockTime": 20
     },
@@ -31,12 +31,12 @@
         },
         "blockTime": 2
     },
-    "polygonMumbai": {
-        "chainId": 80001,
-        "name": "Polygon Mumbai",
-        "url": "https://rpc-mumbai.polygon.technology",
+    "polygonAmoy": {
+        "chainId": 80002,
+        "name": "Polygon Amoy",
+        "url": "https://rpc-amoy.polygon.technology",
         "forking": {
-            "url": "https://rpc-mumbai.polygon.technology"
+            "url": "https://rpc-amoy.polygon.technology"
         },
         "blockTime": 2
     },
