@@ -19,11 +19,11 @@ const config = {
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER]
     },
-    goerli: {
-      chainId: 5,
-      url: "https://rpc.ankr.com/eth_goerli",
+    sepolia: {
+      chainId: 11155111,
+      url: "https://rpc.ankr.com/eth_sepolia",
       forking: {
-        url: "https://rpc.ankr.com/eth_goerli"
+        url: "https://rpc.ankr.com/eth_sepolia"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER]
     },
@@ -35,11 +35,11 @@ const config = {
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER]
     },
-    polygonMumbai: {
-      chainId: 80001,
-      url: "https://rpc.ankr.com/polygon_mumbai",
+    polygonAmoy: {
+      chainId: 80002,
+      url: "https://rpc-amoy.polygon.technology",
       forking: {
-        url: "https://rpc.ankr.com/polygon_mumbai"
+        url: "https://rpc-amoy.polygon.technology"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER]
     },
@@ -52,10 +52,10 @@ const config = {
       accounts: [process.env.PRIVATE_KEY_DEPLOYER]
     },
     polygonZkevmTestnet: {
-      chainId: 1442,
-      url: "https://rpc.public.zkevm-test.net",
+      chainId: 2442,
+      url: "https://rpc.cardona.zkevm-rpc.com",
       forking: {
-        url: "https://rpc.public.zkevm-test.net"
+        url: "https://rpc.cardona.zkevm-rpc.com"
       },
       accounts: [process.env.PRIVATE_KEY_DEPLOYER]
     }
