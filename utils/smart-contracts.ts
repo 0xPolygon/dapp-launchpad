@@ -9,6 +9,7 @@ import { IContractDeploymentMap } from "../types/constants";
 import { runChildProcess } from "./process";
 import fetch from "node-fetch";
 import { getDAppLaunchpadConfig } from "./config";
+import { error } from "console";
 
 // CONSTANTS
 const providerLocalBlockchain = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
@@ -189,6 +190,10 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
         ))
     );
 
+    const blockTransactionDeployedBytecode = await Promise.all(blockTransactionReceipts.map(
+        (receipt) => providerLocalBlockchain.send("eth_getCode", [receipt.contractAddress, receipt.blockNumber])
+    ));
+
     // For all found transactions, get their Contract address, bytecode and name
     const contractsDeployedMap: IContractDeploymentMap = {};
     const artifactFilesPath = shell
@@ -197,7 +202,7 @@ export const getDeployedSmartContractsLocalChain = async (projectRootDir: string
     const artifacts = artifactFilesPath.map((path) => JSON.parse(shell.cat(path)));
 
     for (let i = 0; i < blockTransactionReceipts.length; i++) {
-        const artifact = artifacts.find((artifact) => artifact.bytecode === blockTransactionsContractDeployments[i].input);
+        const artifact = artifacts.find((artifact) => artifact.deployedBytecode === blockTransactionDeployedBytecode[i]);
 
         if (!artifact) continue;
 
@@ -304,7 +309,8 @@ export const deploySmartContractsProduction = async (projectRootDir: string, net
     const blockNumPostDeployment = await getLatestBlockNumberOfNetwork(networkName);
 
     const { contractsDeployedMap } = await getDeployedSmartContractsProduction(projectRootDir, networkName, blockNumPreDeployment, blockNumPostDeployment);
-
+    
+    logSuccessWithBg(`Deployed smart contracts on ${(networksMap as any)[networkName].name} (${blockNumPreDeployment} -> ${blockNumPostDeployment})`);
     // Log data
     Object
         .entries(contractsDeployedMap)
@@ -347,6 +353,11 @@ export const getDeployedSmartContractsProduction = async (projectRootDir: string
         ))
     );
 
+    const blockTransactionDeployedBytecode = await Promise.all(
+        blockTransactionReceipts.map(
+            (receipt) => providerProduction.send("eth_getCode", [receipt.contractAddress, receipt.blockNumber]))
+    );
+
     // For all found transactions, get their Contract address, bytecode and name
     const contractsDeployedMap: { [contractName: string]: { contractAddress: string; bytecode: string; abi: any } } = {};
     const artifactFilesPath = shell
@@ -355,7 +366,7 @@ export const getDeployedSmartContractsProduction = async (projectRootDir: string
     const artifacts = artifactFilesPath.map((path) => JSON.parse(shell.cat(path)));
 
     for (let i = 0; i < blockTransactionReceipts.length; i++) {
-        const artifact = artifacts.find((artifact) => artifact.bytecode === blockTransactionsContractDeployments[i].input);
+        const artifact = artifacts.find((artifact) => artifact.deployedBytecode === blockTransactionDeployedBytecode[i]);
 
         if (!artifact) continue;
 
